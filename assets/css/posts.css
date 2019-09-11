@@ -1,0 +1,54 @@
+td,
+th {
+    border: 3px solid #2d302e;
+    text-align: center;
+    padding: 8px;
+}
+
+.fa-file-alt {
+    color: #0ea3e8;
+}
+
+.fa-edit {
+    color: #0f8c2a;
+}
+
+.fa-globe {
+    color: #db7d09;
+}
+
+.newPost {
+    /*margin: 100px 150px 100px 80px;*/
+    margin: right;
+}
+
+.hide {
+    border: 3px solid #fff;
+}
+
+.center {
+    text-align: center !important;
+}
+
+.create {
+    padding: 0;
+    margin: 0 !important;
+}
+
+td > form {
+    margin-bottom: 0 !important;
+}
+
+input {
+    background-color: #4CAF50 !important;
+    border: none;
+    color: white;
+    /*padding: 15px 32px;*/
+    text-align: center;
+    text-decoration: none;
+    display: inline-block !important;
+    height: 100% !important;
+    width: 100%;
+    font-size: 16px;
+    /*margin: 4px 2px;*/
+}
