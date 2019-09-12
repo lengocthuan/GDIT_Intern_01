@@ -32,18 +32,31 @@
 </head>
 
 <body>
-    <form method="POST">
+    <?php
+        $id = $_GET['idpost'];
+        $stmt = $post->editPost($id);
+
+        while ($row = $stmt->fetch())
+        {
+            $idOld = $row['id'];
+            $title = $row['title'];
+            $content = $row['content'];
+            $email = $row['email'];
+        }
+
+    ?>
+        <form method="POST">
         <div class="title">
-            <h2>Title <input class="input" type="text" placeholder="Input your post title" name="title" required></h2>
+            <h2>Title <input class="input" type="text" placeholder="Input your post title" name="title" required value="<?php echo $title; ?>"></h2>
         </div>
         <div class="content">
-            <textarea class="editor1" name="editor1" ></textarea>
+            <textarea class="editor1" name="editor1"><?php echo $content; ?></textarea>
             <script>
                 CKEDITOR.replace('editor1');
             </script>
             </br>
         </div>
-        <button class="submit" type="submit" name="submit">Save</button>
+        <button class="submit" type="submit" name="submit">Apply change</button>
         <?php
             if (isset($_POST['submit'])) {
                 $title = $_POST['title'];
@@ -52,13 +65,19 @@
                 if ($_POST['editor1'] == null) {
                     echo "<font color='red'>Content field is empty.</font><br/>";
                 } else {
-                    $stmt = $post->createPost();
-
-                    echo "<font color='green'>Post has added successfully.";
-                    echo "<br/><button><a href='./managementposts.php'>View Result</a></button>";
+                    $stmt = $post->updatedPost($idOld);
+                    if ($stmt) {
+                        echo "<font color='green'>Post has updated successfully.";
+                        echo "<br/><button><a href='./managementposts.php'>View Result</a></button>";
+                    } else {
+                        echo "<font color='red'>Post has not updated successfully.";
+                        echo "<br/><button><a href='./managementposts.php'>Reload Management Post</a></button>";
+                    }
+                    
                 }
             }
         ?>
+
     </form>
 
 </body>

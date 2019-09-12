@@ -1,3 +1,26 @@
+<?php
+// include database and object files
+    include_once '../config/database.php';
+    include_once '../objects/post.php';
+
+    session_start();
+    // get database connection
+    $database = new Database();
+
+    $db = $database->getConnection();
+
+    // prepare post object
+    $post = new Post($db);
+
+    $stmt = $post->managementPost();
+
+    // while ($row = $stmt->fetch()) {
+    //     $id = $row['id'];
+    //     $title = $row['title'];
+    //     $id = $row['id'];
+    //     $id = $row['id'];
+    // }
+?>
 <head>
     <meta charset="UTF-8">
     <title>Management Posts</title>
@@ -11,28 +34,7 @@
     <div class="manage">
         <h2>Posts Management</h2>
     </div>
-<?php
-// include database and object files
-    include_once '../config/database.php';
-    include_once '../objects/post.php';
 
-    // get database connection
-    $database = new Database();
-    $db = $database->getConnection();
-
-    // prepare post object
-    $post = new Post($db);
-
-    $stmt = $post->managementPost();
-
-    // while ($row = $stmt->fetch()) {
-    //     echo $row['title'] . "\n,";
-    //     echo $row['content'] . "\n,";
-    //     echo $row['status'] . "\n,";
-    //     echo $row['user_id'] . "\n,";
-    // }
-
-?>
     <table>
         <tr>
             <th rowspan="2">No.</th>
@@ -53,7 +55,11 @@
                 <td><?php echo htmlspecialchars($row['id']) ?></td>
                 <td><?php echo htmlspecialchars($row['title']) ?></td>
                 <td><i class="fas fa-file-alt"></i></td>
-                <td><i class="fas fa-edit"></i></td>
+                <td>
+                        <a href="./editpost.php?<?php echo $row['id'];?>">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                </td>
                 <td><i class="fas fa-globe"></i></td>
             </tr>
             <?php endwhile; ?>
