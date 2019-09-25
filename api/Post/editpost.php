@@ -1,9 +1,10 @@
 <?php
     // include database and object files
-    include_once '../config/database.php';
-    include_once '../objects/post.php';
+    require_once '../config/database.php';
+    require_once '../objects/posts.php';
 
     $database = new Database();
+
     $db = $database->getConnection();
 
     // prepare post object
@@ -17,14 +18,14 @@
     if (!isset($_SESSION['id'])) {
         $message = 'You must be logged in to access this page';
     }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Create a new post</title>
+    <title>Edit a post</title>
     <link rel="stylesheet" prefetch href="https://fonts.googleapis.com/css?family=Open+Sans:600">
     <link rel="stylesheet" href="../../assets/css/createpost.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
@@ -34,6 +35,7 @@
 <body>
     <?php
         $id = $_GET['idpost'];
+
         $stmt = $post->editPost($id);
 
         while ($row = $stmt->fetch())
@@ -41,9 +43,7 @@
             $idOld = $row['id'];
             $title = $row['title'];
             $content = $row['content'];
-            $email = $row['email'];
         }
-
     ?>
         <form method="POST">
         <div class="title">
@@ -59,21 +59,23 @@
         <button class="submit" type="submit" name="submit">Apply change</button>
         <?php
             if (isset($_POST['submit'])) {
-                $title = $_POST['title'];
-                $editor1 = $_POST['editor1'];
+                $newTitle = $_POST['title'];
+                $newEditor1 = $_POST['editor1'];
 
                 if ($_POST['editor1'] == null) {
                     echo "<font color='red'>Content field is empty.</font><br/>";
                 } else {
-                    $stmt = $post->updatedPost($idOld);
+                    // print_r($idOld." ". $newTitle." ". $newEditor1);
+                    $stmt = $post->updatedPost($idOld, $newTitle, $newEditor1, $_SESSION['id']);
+
                     if ($stmt) {
                         echo "<font color='green'>Post has updated successfully.";
-                        echo "<br/><button><a href='./managementposts.php'>View Result</a></button>";
+                        // header("Location: ./managementposts.php");
+                        echo "<script type='text/javascript'>alert('Wrong Username or Password');window.location='./managementposts.php';</script>";
                     } else {
                         echo "<font color='red'>Post has not updated successfully.";
                         echo "<br/><button><a href='./managementposts.php'>Reload Management Post</a></button>";
                     }
-                    
                 }
             }
         ?>
