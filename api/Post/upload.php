@@ -31,7 +31,6 @@
             $link = "$path" . "/template_for_user.html";
 
             $subject = file_get_contents($link);
-            // print_r($content);die();
             $parternTitle = "/<title>([^<]*)<\/title>/im";
             $replacementTitle = "<title>$title</title>";
             file_put_contents($link, preg_replace($parternTitle, $replacementTitle, $subject));

@@ -10,11 +10,11 @@
     <title>Management Posts</title>
 
     <link rel="stylesheet" prefetch href="https://fonts.googleapis.com/css?family=Open+Sans:600">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo LOCAL_PATH . 'assets/bootstrap/dist/css/bootstrap.min.css';?>">
+    <link rel="stylesheet" href="<?php echo LOCAL_PATH . '/assets/fontawesome/css/all.min.css';?>">
     <link rel="stylesheet" href="<?php echo LOCAL_PATH . '/assets/css/posts.css';?>">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="<?php echo LOCAL_PATH . '/assets/js/jquery.min.js' ; ?>"></script>
+    <script src="<?php echo LOCAL_PATH . '/assets/bootstrap/dist/js/bootstrap.min.js'; ?>"></script>
 
 </head>

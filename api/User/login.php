@@ -13,7 +13,6 @@
     $user->username = isset($_GET['username']) ? $_GET['username'] : die();
     $user->password = isset($_GET['password']) ? $_GET['password'] : die();
 
-    // $user->password = base64_encode(isset($_GET['password']) ? $_GET['password'] : die());
     // read the details of user to be edited
     $stmt = $user->login();
 
