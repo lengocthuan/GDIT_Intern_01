@@ -31,15 +31,20 @@
             $link = "$path" . "/template_for_user.html";
 
             $subject = file_get_contents($link);
-
+            // print_r($content);die();
             $parternTitle = "/<title>([^<]*)<\/title>/im";
             $replacementTitle = "<title>$title</title>";
             file_put_contents($link, preg_replace($parternTitle, $replacementTitle, $subject));
 
             $newSubject = file_get_contents($link);
             $parternContent = "/<p>([^<]*)<\/p>/im";
-            $replacementContent = "<p>$content</p>";
+            $replacementContent = "$content";
             file_put_contents($link, preg_replace($parternContent, $replacementContent, $newSubject));
+
+            $parternPathLocal = '/src="/im';
+            $replacementPathLocal = 'src="/var/www/html';
+            $newSubjectContent = file_get_contents($link);
+            file_put_contents($link, preg_replace($parternPathLocal, $replacementPathLocal, $newSubjectContent));
 
             $convert = new ConvertString();
             $renameTitle = $convert->convert_vi_to_en($title);

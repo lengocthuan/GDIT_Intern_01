@@ -42,10 +42,6 @@
             <textarea id="editor1" name="editor1" ></textarea>
             <script type="text/javascript">
                     CKEDITOR.replace( 'editor1');
-                    // CKEDITOR.replace( 'editor1', {
-                    //     height: 300,
-                    //     filebrowserUploadUrl: "ckeditor/plugins/upload/upload.php"
-                    // });
             </script>
             </br>
         </div>
