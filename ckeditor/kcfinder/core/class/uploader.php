@@ -16,6 +16,8 @@ namespace kcfinder;
 
 class uploader {
 
+    public $filePath = '';
+
 /** Release version */
     const VERSION = "3.12";
 

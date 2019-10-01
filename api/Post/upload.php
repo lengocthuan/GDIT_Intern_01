@@ -5,7 +5,6 @@
     require_once ('../config/ftp.php');
     require_once ('../objects/posts.php');
     require_once ('../objects/converstring.php');
-
     session_start();
 
     // get database connection
@@ -54,6 +53,76 @@
                 echo "Failed to copy $link...\n";
                 echo "Log out and Log in again, please.";
             }
+
+            //recreate a original file html
+            $original = "$path" . "/original.html";
+
+            if(!copy($original, $link)) {
+                echo "Fail to copy $original...\n";
+            }
+
+            //copy image from local to server ftp
+            //export link of image in post
+            $regex = '/src="([^"]+)"/'; //get string in scr= ""
+            preg_match_all($regex, $content, $matches, PREG_SET_ORDER, 0);
+
+            // var_dump($matches[0][1]);
+            $original = "/var/www/html";
+            $originalGlobal = "/var/www/html/GDIT/app/global/";
+            $originalLocal = "/GDIT/app/ckeditor/kcfinder/upload/images/";
+            //using FTP upload file html from LOCAL to GLOBAL
+            $information_ftp = new Ftp();
+            $conn_id = $information_ftp->connectFTP();
+
+            // Directory name which is to be created
+            $dir = $originalGlobal . "$limitedTitle";
+
+            // Creating directory 
+            if (ftp_mkdir($conn_id, $dir)) {
+                // Execute if directory created successfully 
+                echo "$dir Successfully created";echo "<br>";
+                if (ftp_chmod($conn_id, 0777,$dir)) {
+                // Execute if directory created successfully 
+                    echo "$dir Successfully chmod";echo "<br>";
+                    foreach ($matches as $pathLocal) {
+                        // try to upload file
+                        $imageLocal = $original . $pathLocal[1]; // var/www/html/GDIT/app/ckeditor/.../imagename.jpg|* //image in local;
+
+                        $imageName = str_replace($originalLocal, "", $pathLocal[1]); //get image name saved;
+                        $imageGlobal = $dir . "/" . "$imageName"; //create new path for save image;
+
+                        $image_new_list [] = $imageGlobal;
+
+                        if (ftp_put($conn_id, $imageGlobal, $imageLocal, FTP_ASCII)) {
+                            echo "File transfer successful - $imageLocal";echo "<br>";
+                        } else {
+                            echo "There was an error while uploading $imageLocal";
+                        }
+                    }
+                } else {
+                        echo "There was an error while chmod $imageLocal";
+                }
+            }
+            else {
+                // Execute if fails to create directory 
+                // echo "Error while creating $dir";
+                $contents_on_server = ftp_nlist($conn_id, $originalGlobal); //Returns an array of filenames from the specified directory on success or FALSE on error.
+
+                // Test if file is in the ftp_nlist array
+                if (in_array($dir, $contents_on_server)) {
+                    echo "<br>";
+                    echo "I found ". $dir ." directory has exist in " . $originalGlobal;
+                }
+                else
+                {
+                    echo "<br>";
+                    echo $pathFolder . " not found directory : " . $path;
+                }
+            }
+            // die();
+
+            //create a temp file from file html at local and replace src img old by new img link;
+            $temp_html = file_get_contents($localFilePath); //get content file;
 
             //using FTP upload file html from LOCAL to GLOBAL
             $information_ftp = new Ftp();

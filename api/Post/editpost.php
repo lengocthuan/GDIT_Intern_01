@@ -10,6 +10,7 @@
     // prepare post object
     $post = new Post($db);
 
+    $appPath = 'http://localhost/GDIT/app';
 ?>
 
 <?php
@@ -29,11 +30,13 @@
     <link rel="stylesheet" prefetch href="https://fonts.googleapis.com/css?family=Open+Sans:600">
     <link rel="stylesheet" href="../../assets/css/createpost.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
+    <script src="<?php echo $appPath . '/ckeditor/ckeditor.js';?>"></script>
     <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
 </head>
 
 <body>
     <?php
+
         $id = $_GET['idpost'];
 
         $stmt = $post->editPost($id);
@@ -69,9 +72,7 @@
                     $stmt = $post->updatedPost($idOld, $newTitle, $newEditor1, $_SESSION['id']);
 
                     if ($stmt) {
-                        echo "<font color='green'>Post has updated successfully.";
-                        // header("Location: ./managementposts.php");
-                        echo "<script type='text/javascript'>alert('Wrong Username or Password');window.location='./managementposts.php';</script>";
+                        echo "<script type='text/javascript'>alert('Post has updated successfully.');window.location='./managementposts.php';</script>";
                     } else {
                         echo "<font color='red'>Post has not updated successfully.";
                         echo "<br/><button><a href='./managementposts.php'>Reload Management Post</a></button>";

@@ -41,7 +41,10 @@
         <div class="content">
             <textarea id="editor1" name="editor1" ></textarea>
             <script type="text/javascript">
-                    CKEDITOR.replace( 'editor1');
+                        CKEDITOR.replace( 'editor1', {
+                            filebrowserUploadUrl: '/ckeditor/ck_upload.php',
+        filebrowserUploadMethod: 'form',
+     });
             </script>
             </br>
         </div>

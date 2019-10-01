@@ -30,11 +30,6 @@
 
 <body>
     <?php include('../../header.html'); ?>
-    <?php
-            if (!empty($_SESSION['message'])) {
-                echo '<script type="text/javascript"> alert("Remove successful"); </script>';
-            }
-    ?>
     <div class="manage">
         <h2>Posts Management</h2>
     </div>

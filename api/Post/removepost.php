@@ -21,7 +21,9 @@
     $stmt = $post->removepost($id);
 
     if ($stmt) {
-        $_SESSION['message'] = 'Remove a post successful';
-        header("Location: managementposts.php");
+        echo "<script  type='text/javascript' charset='utf-8'>
+                    window.alert('Remove a post successful');
+                    window.location.href='managementposts.php';
+                </script>";
     }
 
