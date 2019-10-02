@@ -77,53 +77,13 @@
                 $subject = file_get_contents($file);
                 return file_put_contents($link, preg_replace($partent, $replacement, $subject));
             }
-            $link = "local/15615.html";
+            $link = "local/fhkfxhxgh.html";
             // $array = ["ba", "bama"];
             $array = ["/var/www/html/GDIT/app/global/15615/nghiale01.jpg", "/var/www/html/GDIT/app/global/15615/phu03.jpg"];
-            
-            // foreach ($array as $key => $value) {
-            //     // echo $value; die();
-            //     if ($value == "/var/www/html/GDIT/app/global/15615/nghiale01.jpg") {
-            //         unset($array[$key]);
-            //     }
-            // }
-            // var_dump($array); die();
+
             $subject = file_get_contents($link);
-            $partern = '/src="([^"]+)"/';
-            preg_match_all($partern, $subject, $matches, PREG_SET_ORDER, 0);
-            // $new = array_replace($matches, $array);
-            // var_dump($new); die();
-            // foreach ($array as $key => $new) {
-            //     foreach ($matches as $k => $old) {
-            //         var_dump($old[1]);die();
-            //         $change = array_replace($old[1], $new, $subject);
-            //         file_put_contents($link, $change);break;
-            //         // unset($matches[$k]);
-            //     }
-            //     unset($array[$key]);
-            // }
-            // foreach ($matches as $val) {
-            //         $change = array_replace($val[1], $array, $subject);
-            //         unset($array);
-            //         file_put_contents($link, $change);
-            //         print_r($val[1]);echo "<br>";
-            //     }
-                // echo $value; echo "<br>";
-            // }
-            // die();
-            foreach ($matches as $value) {
-                // print_r($value[1]);
-                foreach ($array as $val) {
-                    // echo $val; echo "<br>";
-                    // echo $array;die();
-                    // break;
-                    $change = str_replace($value[1], $val, $subject);
-                    // unset($val);
-                    file_put_contents($link, $change);break;
-                }
-                $subject = file_get_contents($link);
-                var_dump($subject);echo "<br>";
-                die();
-            }
-            // var_dump($arrayold0);
+            $partern = "/var/www/html/GDIT/app/ckeditor/kcfinder/upload/images/";
+            $replace = "/home/thuan/global/$title/";
+            // preg_match_all($partern, $subject, $matches, PREG_SET_ORDER, 0);
+
 ?>

@@ -27,6 +27,7 @@
             }
 
             $path = dirname(__DIR__,2);
+            $path_global = "/home/thuan/global";
             $link = "$path" . "/template_for_user.html";
 
             $subject = file_get_contents($link);
@@ -68,7 +69,7 @@
 
             // var_dump($matches[0][1]);
             $original = "/var/www/html";
-            $originalGlobal = "/var/www/html/GDIT/app/global/";
+            $originalGlobal = "/home/thuan/global/";
             $originalLocal = "/GDIT/app/ckeditor/kcfinder/upload/images/";
             //using FTP upload file html from LOCAL to GLOBAL
             $information_ftp = new Ftp();
@@ -81,7 +82,7 @@
             if (ftp_mkdir($conn_id, $dir)) {
                 // Execute if directory created successfully 
                 echo "$dir Successfully created";echo "<br>";
-                if (ftp_chmod($conn_id, 0777,$dir)) {
+                if (ftp_chmod($conn_id, 0777, $dir)) {
                 // Execute if directory created successfully 
                     echo "$dir Successfully chmod";echo "<br>";
                     foreach ($matches as $pathLocal) {
@@ -91,7 +92,7 @@
                         $imageName = str_replace($originalLocal, "", $pathLocal[1]); //get image name saved;
                         $imageGlobal = $dir . "/" . "$imageName"; //create new path for save image;
 
-                        $image_new_list [] = $imageGlobal;
+                        // $image_new_list [] = $imageGlobal;
 
                         if (ftp_put($conn_id, $imageGlobal, $imageLocal, FTP_ASCII)) {
                             echo "File transfer successful - $imageLocal";echo "<br>";
@@ -116,23 +117,22 @@
                 else
                 {
                     echo "<br>";
-                    echo $pathFolder . " not found directory : " . $path;
+                    echo $dir . " not found directory : " . $originalGlobal;
                 }
             }
             // die();
-
             //create a temp file from file html at local and replace src img old by new img link;
-            $temp_html = file_get_contents($localFilePath); //get content file;
-
-            //using FTP upload file html from LOCAL to GLOBAL
-            $information_ftp = new Ftp();
-            $conn_id = $information_ftp->connectFTP();
+            $temp_html = "/var/www/html/GDIT/app/temp.html";
+            $get_temp_html = file_get_contents($localFilePath); //get content file created at local folder;
+            $partent_temp_html = "/\/var\/www\/html\/GDIT\/app\/ckeditor\/kcfinder\/upload\/images\//";
+            $replacement_temp_html = $dir . "/";
+            $new_temp_html = file_put_contents($temp_html, preg_replace($partent_temp_html, $replacement_temp_html, $get_temp_html));
 
             // local & server file path
-            $remoteFilePath = "$path" . "/global/$limitedTitle.html";
+            $remoteFilePath = $replacement_temp_html . "/$limitedTitle.html";
 
             // try to upload file
-            if (ftp_put($conn_id, $remoteFilePath, $localFilePath, FTP_ASCII)) {
+            if (ftp_put($conn_id, $remoteFilePath, $temp_html, FTP_ASCII)) {
                 echo "File transfer successful - $localFilePath";
             } else {
                 echo "There was an error while uploading $localFilePath";

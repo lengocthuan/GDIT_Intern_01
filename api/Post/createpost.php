@@ -1,16 +1,15 @@
 <?php
     // include database and object files
-    require_once ('../config/database.php');
-    require_once ('../objects/posts.php');
-    
+    // require_once ('../config/database.php');
+    require_once("../common/header.php");
+    require_once ("../objects/posts.php");
+
     $database = new Database();
 
     $db = $database->getConnection();
 
     // prepare post object
     $post = new Post($db);
-
-    
 ?>
 
 <?php
@@ -19,6 +18,8 @@
 
     if (!isset($_SESSION['id'])) {
         $message = 'You must be logged in to access this page';
+        print_r($message);
+        header("Location: ../../index.html");
     }
 ?>
 <!DOCTYPE html>
@@ -42,9 +43,8 @@
             <textarea id="editor1" name="editor1" ></textarea>
             <script type="text/javascript">
                         CKEDITOR.replace( 'editor1', {
-                            filebrowserUploadUrl: '/ckeditor/ck_upload.php',
-        filebrowserUploadMethod: 'form',
-     });
+                filebrowserUploadMethod: 'form',
+             });
             </script>
             </br>
         </div>

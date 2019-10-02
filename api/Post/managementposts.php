@@ -1,15 +1,7 @@
 <?php
-    // include database and object files
-    require_once ('../config/database.php');
-    require_once ('../objects/posts.php');
-    require_once ('../objects/paginatepage.php');
-
-    session_start();
-    ob_start();
-    // get database connection
-    $database = new Database();
-
-    $db = $database->getConnection();
+    require_once dirname(__DIR__) . "/common/header.php";
+    require_once dirname(__DIR__) . "/objects/posts.php";
+    require_once dirname(__DIR__) . "/objects/paginatepage.php";
 
     // prepare post object
     $post = new Post($db);
@@ -17,19 +9,8 @@
     $stmt = $post->managementPost();
 
 ?>
-<head>
-    <meta charset="UTF-8">
-    <title>Management Posts</title>
-    <link rel="stylesheet" prefetch href="https://fonts.googleapis.com/css?family=Open+Sans:600">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../assets/css/posts.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-</head>
 
 <body>
-    <?php include('../../header.html'); ?>
     <div class="manage">
         <h2>Posts Management</h2>
     </div>
@@ -49,12 +30,11 @@
         <tr>
             <th rowspan="2">No.</th>
             <th rowspan="2">Post title</th>
-            <th class="center" colspan="4">
+            <th class="center" colspan="3">
                     Status
             </th>
         </tr>
         <tr>
-                <td>Created</td>
                 <td>Edited</td>
                 <td>Publicized</td>
                 <td>Delete</td>
@@ -62,9 +42,8 @@
         <tbody>
             <?php while ($row = $stmt->fetch()): ?>
             <tr>
-                <td><?php echo htmlspecialchars($row['id']) ?></td>
-                <td><?php echo htmlspecialchars($row['title']) ?></td>
-                <td><i class="fas fa-file-alt"></i></td>
+                <td><?php echo htmlspecialchars($row['id']); ?></td>
+                <td><?php echo htmlspecialchars($row['title']); ?></td>
                 <td>
                     <a href="./editpost.php?idpost=<?php echo $row['id'];?>">
                         <i class="fas fa-edit"></i>
