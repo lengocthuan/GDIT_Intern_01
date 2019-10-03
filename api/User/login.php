@@ -1,12 +1,8 @@
 <?php
-    session_start();
     // include database and object files
-    include_once '../config/database.php';
-    include_once '../objects/user.php';
+    require_once dirname(__DIR__) . '/common/header.php';
+    require_once dirname(__DIR__) . '/objects/user.php';
 
-    // get database connection
-    $database = new Database();
-    $db = $database->getConnection();
     // prepare user object
     $user = new User($db);
     // set ID property of user to be edited
@@ -29,12 +25,14 @@
 
         $_SESSION['id'] = $row['id'];
         $_SESSION['username'] = $row['username'];
-        header("Location: ../Post/managementposts.php");
+        header("Location:" . LOCAL_PATH . "/api/Post/managementposts.php");
     } else {
         $user_arr = array(
             "status" => false,
             "message" => "Invalid Username or Password!",
         );
+        $_SESSION['failed'] = "Invalid Username or Password!";
     }
     // make it json format
-    print_r(json_encode($user_arr));
+    // print_r(json_encode($user_arr));
+?>

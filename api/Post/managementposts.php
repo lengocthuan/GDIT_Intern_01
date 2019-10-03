@@ -9,75 +9,131 @@
     $stmt = $post->managementPost();
 
 ?>
-
 <body>
-    <div class="manage">
+    <div>
         <h2>Posts Management</h2>
     </div>
     <p>
         <?php
             if (isset($_SESSION['successful'])) {
-                echo "<div class='alert alert-success alert-dismissible'>
-                            <a href='#'' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                            <strong>Successful upload.</strong>
-                        </div>";
+                ?>
+                <div class='alert alert-success alert-dismissible'>
+                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                        <strong><?php echo $_SESSION['successful']; ?></strong>
+                </div>
+                <?php
                 unset($_SESSION['successful']);
             }
         ?>
     </p>
+    <p>
+        <?php
+            if (isset($_SESSION['rmsuccessful'])) {
+                ?>
+                <div class='alert alert-info alert-dismissible'>
+                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                        <strong><?php echo $_SESSION['rmsuccessful']; ?></strong>
+                </div>
+                <?php
+                unset($_SESSION['rmsuccessful']);
+            }
+        ?>
+    </p>
+    <p>
+        <?php
+            if (isset($_SESSION['updated'])) {
+                ?>
+                <div class='alert alert-success alert-dismissible'>
+                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                        <strong><?php echo $_SESSION['updated']; ?></strong>
+                </div>
+                <?php
+                unset($_SESSION['updated']);
+            }
+            if (isset($_SESSION['ufailed'])) {
+                ?>
+                <div class='alert alert-success alert-dismissible'>
+                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                        <strong><?php echo $_SESSION['ufailed']; ?></strong>
+                </div>
+                <?php
+                unset($_SESSION['ufailed']);
+            }
+        ?>
+    </p>
     <form method="POST">
-    <table>
+    <div class = "container createpost" >
+        <a href="createpost.php" class="btn btn-success" role="button" data-toggle="tooltip" title="Create"><i class="fas fa-plus-square"></i></a>
+        <button class="btn btn-primary" type="submit" name="submit" value="upload" data-toggle="tooltip" title="Upload"><i class="fas fa-cloud-upload-alt"></i></button>
+        <button class="btn btn-danger" type="submit" name="remove" value="remove" data-toggle="tooltip" title="Remove"><i class="fas fa-trash-alt"></i></button>
+        <button class="btn btn-warning" type="submit" name="restore" value="restore" data-toggle="tooltip" title="Restore"><i class="fas fa-trash-restore-alt"></i></button>
+    </div>
+    <table class="container table table-border" >
         <tr>
-            <th rowspan="2">No.</th>
-            <th rowspan="2">Post title</th>
-            <th class="center" colspan="3">
+            <th class ="border-top" rowspan="2">No.</th>
+            <th class ="border-top" rowspan="2">Post title</th>
+            <th class="border-top center" colspan="3">
                     Status
             </th>
         </tr>
         <tr>
-                <td>Edited</td>
-                <td>Publicized</td>
-                <td>Delete</td>
+                <td class="width10">Edited</td>
+                <td class="width15"><input type="checkbox" class="check" id="checkAll">Check All</td>
+                <td class="width10">Information</td>
         </tr>
-        <tbody>
+        <tbody class="tbody">
             <?php while ($row = $stmt->fetch()): ?>
             <tr>
-                <td><?php echo htmlspecialchars($row['id']); ?></td>
-                <td><?php echo htmlspecialchars($row['title']); ?></td>
+                <td><?php echo $row['id']; ?></td>
+                <td class ="alignment-left"><?php echo htmlspecialchars($row['title']); ?></td>
                 <td>
-                    <a href="./editpost.php?idpost=<?php echo $row['id'];?>">
+                    <a href="editpost.php?idpost=<?php echo $row['id'];?>">
                         <i class="fas fa-edit"></i>
                     </a>
                 </td>
                 <td>
-                    <input type="checkbox" name="post[]" value="<?php echo $row['id'];?>"/>&nbsp;
+                    <input class ="check" type="checkbox" name="post[]" value="<?php echo $row['id'];?>"/>&nbsp;
                 </td>
-                <td>
-                    <a href="./removepost.php?idpost=<?php echo $row['id'];?>" onclick="return confirm('Are you sure?')">
-                        <i class="fas fa-trash"></i>
-                    </a>
+                <td class ="alignment-left">
+                    <?php
+                        switch ($row['status']) {
+                            case 1:
+                                echo C; //The post has been created.
+                                break;
+                            case 2:
+                                echo U; //The post has been edited but not yet upload;
+                                break;
+                            case 3:
+                                echo P; //The post has been uploaded to the latest version.
+                                break;
+                            default:
+                                # code...
+                                break;
+                        }
+                    ?>
                 </td>
             </tr>
             <?php endwhile; ?>
         </tbody>
     </table>
-    
-    <div class = "createpost">
-            <a href="createpost.php" class="btn btn-success" role="button">Create</a>
-            <button class="btn btn-primary" type="submit" name="submit" value="submit">Upload</button>
-    </div>
     </form>
-    
 </body>
 <?php
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['submit']) || isset($_POST['remove'])) {
             if(!empty($_POST['post'])){
-            // Loop to store and display values of individual checked checkbox.
-                foreach($_POST['post'] as $selected){
-                    $checkList[] = $selected;
-                }
-                $_SESSION['checkList'] = $checkList;
-                header("Location: upload.php");
+                // Loop to store and display values of individual checked checkbox.
+                    foreach($_POST['post'] as $selected){
+                        $checkList[] = $selected;
+                    }
+                    $_SESSION['checkList'] = $checkList;
+                    if (isset($_POST['submit'])) {
+                        header("Location: upload.php");
+                    } else {
+                        echo '<script language="javascript">confirm("Do you want to remove the selected posts?");</script>';
+                        header("Location: removepost.php");
+                    }
+            } else {
+                echo '<script language="javascript">alert("Please select the checkbox you want.");</script>';
             }
         }
     ?>
@@ -96,3 +152,6 @@
     echo $page->getPagination();
 ?>
 </html>
+<?php
+    require_once dirname(__DIR__) . "/common/footer.php";
+?>

@@ -1,17 +1,9 @@
 <?php
-    // include database and object files
-
-    require_once ('../config/database.php');
-    require_once ('../config/ftp.php');
-    require_once ('../objects/posts.php');
-    require_once ('../objects/converstring.php');
-    session_start();
-
-    // get database connection
-    $database = new Database();
-
-    $db = $database->getConnection();
-
+    // include header
+    require_once dirname(__DIR__) . ('/common/header.php');
+    require_once dirname(__DIR__) . ('/config/ftp.php');
+    require_once dirname(__DIR__) . ('/objects/posts.php');
+    require_once dirname(__DIR__) . ('/common/generalFunction.php');
     // prepare post object
     $post = new Post($db);
 
@@ -21,41 +13,56 @@
 
             while ($row = $stmt->fetch())
             {
-                $idOld = $row['id'];
-                $title = $row['title'];
+                $id_old = $row['id'];
+                $title = htmlspecialchars($row['title']);
                 $content = $row['content'];
             }
 
             $path = dirname(__DIR__,2);
-            $path_global = "/home/thuan/global";
             $link = "$path" . "/template_for_user.html";
 
+            $using = new General();
+
+            $partern_title = "/<title>([^<]*)<\/title>/im";
+            $replacement_title = "<title>$title</title>";
+            $new_title = $using->replaceContentForPartent($partern_title, $replacement_title, $link, $link);
+
+            $partern_content = "/<p>([^<]*)<\/p>/im";
+            $replacement_content = "$content";
+            $new_content = $using->replaceContentForPartent($partern_content, $replacement_content, $link, $link);
+
+            $partern_check_link_image_global = '/src="http/im';
             $subject = file_get_contents($link);
-            $parternTitle = "/<title>([^<]*)<\/title>/im";
-            $replacementTitle = "<title>$title</title>";
-            file_put_contents($link, preg_replace($parternTitle, $replacementTitle, $subject));
+            preg_match_all($partern_check_link_image_global, $subject, $matches, PREG_SET_ORDER, 0);
 
-            $newSubject = file_get_contents($link);
-            $parternContent = "/<p>([^<]*)<\/p>/im";
-            $replacementContent = "$content";
-            file_put_contents($link, preg_replace($parternContent, $replacementContent, $newSubject));
+            if (empty($matches)) {
+                $partern_path_local = '/src="/im';
+                $replacement_path_local = 'src="/var/www/html';
+                $new_subject_content = $using->replaceContentForPartent($partern_path_local, $replacement_path_local, $link, $link);
+            }
 
-            $parternPathLocal = '/src="/im';
-            $replacementPathLocal = 'src="/var/www/html';
-            $newSubjectContent = file_get_contents($link);
-            file_put_contents($link, preg_replace($parternPathLocal, $replacementPathLocal, $newSubjectContent));
+            // $convert = new ConvertString();
+            $rename_title = $using->convert_vi_to_en($title);
+            $limited_title = substr($rename_title, 0, 50);
+            $check_title_before_create_file = $using->checkCreateFile($limited_title, $id_old);
 
-            $convert = new ConvertString();
-            $renameTitle = $convert->convert_vi_to_en($title);
-            $limitedTitle = substr($renameTitle, 0, 50);
-            $localFilePath = "$path" . "/local/$limitedTitle.html";
+            if ($check_title_before_create_file) {
+                $local_file_path = "$path" . "/local/$limited_title" . "_$id_old.html";
+            } else {
+                $local_file_path = "$path" . "/local/the_post_$id_old.html";
+                $limited_title = "the_post";
+            }
 
-            if (!copy($link, $localFilePath)) {
+            if (!copy($link, $local_file_path)) {
                 echo "Failed to copy $link...\n";
                 echo "Log out and Log in again, please.";
             }
 
-            //recreate a original file html
+            if (!chmod($local_file_path, 0777)) {
+                echo "$local_file_path error when chmod for this file.";
+            }
+
+            //reset content file template from a original file html
             $original = "$path" . "/original.html";
 
             if(!copy($original, $link)) {
@@ -67,16 +74,16 @@
             $regex = '/src="([^"]+)"/'; //get string in scr= ""
             preg_match_all($regex, $content, $matches, PREG_SET_ORDER, 0);
 
-            // var_dump($matches[0][1]);
             $original = "/var/www/html";
-            $originalGlobal = "/home/thuan/global/";
+
             $originalLocal = "/GDIT/app/ckeditor/kcfinder/upload/images/";
+
             //using FTP upload file html from LOCAL to GLOBAL
             $information_ftp = new Ftp();
             $conn_id = $information_ftp->connectFTP();
 
             // Directory name which is to be created
-            $dir = $originalGlobal . "$limitedTitle";
+            $dir = PATH_GLOBAL . "$id_old";
 
             // Creating directory 
             if (ftp_mkdir($conn_id, $dir)) {
@@ -85,65 +92,74 @@
                 if (ftp_chmod($conn_id, 0777, $dir)) {
                 // Execute if directory created successfully 
                     echo "$dir Successfully chmod";echo "<br>";
-                    foreach ($matches as $pathLocal) {
-                        // try to upload file
-                        $imageLocal = $original . $pathLocal[1]; // var/www/html/GDIT/app/ckeditor/.../imagename.jpg|* //image in local;
-
-                        $imageName = str_replace($originalLocal, "", $pathLocal[1]); //get image name saved;
-                        $imageGlobal = $dir . "/" . "$imageName"; //create new path for save image;
-
-                        // $image_new_list [] = $imageGlobal;
-
-                        if (ftp_put($conn_id, $imageGlobal, $imageLocal, FTP_ASCII)) {
-                            echo "File transfer successful - $imageLocal";echo "<br>";
-                        } else {
-                            echo "There was an error while uploading $imageLocal";
-                        }
+                    foreach ($matches as $path_local) {
+                        $using->getImageName($path_local[1], $dir);
                     }
                 } else {
-                        echo "There was an error while chmod $imageLocal";
+                        echo "There was an error while chmod $image_local";
                 }
             }
             else {
-                // Execute if fails to create directory 
-                // echo "Error while creating $dir";
-                $contents_on_server = ftp_nlist($conn_id, $originalGlobal); //Returns an array of filenames from the specified directory on success or FALSE on error.
+                // Execute if fails to create directory
+                $contents_on_server = ftp_nlist($conn_id, PATH_GLOBAL); //Returns an array of filenames from the specified directory on success or FALSE on error.
 
                 // Test if file is in the ftp_nlist array
                 if (in_array($dir, $contents_on_server)) {
-                    echo "<br>";
-                    echo "I found ". $dir ." directory has exist in " . $originalGlobal;
+                    foreach ($matches as $path_local) {
+                        $get_image = $using->getImageName($path_local[1], $dir);
+                        if (isset($get_image)) {
+                            $array_using[] = $get_image;
+                        }
+                    }
+
+                    $check_content_in_directory = ftp_nlist($conn_id, $dir);
+
+                    foreach ($check_content_in_directory as $item) {
+                        $path_info = pathinfo($item);
+                        if ($path_info['extension'] != "html") {
+                            $list_content[] = $path_info['basename'];
+                        }
+                    }
+                    //get file need delete
+                    $array_need_delete = array_diff($list_content, $array_using);
+                    foreach ($array_need_delete as $value) {
+                        if (!ftp_delete($conn_id, $dir . "/$value")) {
+                            echo "Cant delete this file $value cause file not exist or deleted.";
+                        }
+                    }
                 }
                 else
                 {
                     echo "<br>";
-                    echo $dir . " not found directory : " . $originalGlobal;
+                    echo $dir . " not found directory : " . PATH_GLOBAL;
                 }
             }
-            // die();
             //create a temp file from file html at local and replace src img old by new img link;
-            $temp_html = "/var/www/html/GDIT/app/temp.html";
-            $get_temp_html = file_get_contents($localFilePath); //get content file created at local folder;
+            $temp_html = dirname(__DIR__,2) . "/temp.html"; //path local file final;
             $partent_temp_html = "/\/var\/www\/html\/GDIT\/app\/ckeditor\/kcfinder\/upload\/images\//";
             $replacement_temp_html = $dir . "/";
-            $new_temp_html = file_put_contents($temp_html, preg_replace($partent_temp_html, $replacement_temp_html, $get_temp_html));
+            $using->replaceContentForPartent($partent_temp_html, $replacement_temp_html, $temp_html, $local_file_path);
 
             // local & server file path
-            $remoteFilePath = $replacement_temp_html . "/$limitedTitle.html";
-
+            $remoteFilePath = $replacement_temp_html . "/$limited_title" . "_$id_old.html";
+            
             // try to upload file
             if (ftp_put($conn_id, $remoteFilePath, $temp_html, FTP_ASCII)) {
-                echo "File transfer successful - $localFilePath";
+                echo "File transfer successful - $local_file_path";
+                if (!ftp_chmod($conn_id, 0644, $remoteFilePath)) {
+                    echo "Error when chmod for file $remoteFilePath";
+                }
             } else {
-                echo "There was an error while uploading $localFilePath";
+                echo "There was an error while uploading $local_file_path";
             }
             //close ftp
             ftp_close($conn_id);
+            file_put_contents($temp_html, "");
         }
     }
 
     unset($_SESSION['checkList']);
-    $_SESSION['successful'] = "Upload file successfull.";
+    $_SESSION['successful'] = "Upload file successful.";
     ob_end_clean();
     header("Location: managementposts.php");
 ?>

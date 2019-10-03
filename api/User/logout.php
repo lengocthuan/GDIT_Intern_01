@@ -1,6 +1,7 @@
 <?php
-    session_start();
+    require_once dirname(__DIR__) . "/common/header.php";
+
     if (session_destroy()) {
-        header("Location: ../../index.html");
+        header("Location:". LOCAL_PATH . "/index.php");
     }
 ?>

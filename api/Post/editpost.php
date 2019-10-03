@@ -1,42 +1,14 @@
 <?php
-    // include database and object files
-    require_once '../config/database.php';
-    require_once '../objects/posts.php';
 
-    $database = new Database();
-
-    $db = $database->getConnection();
+    require_once dirname(__DIR__) . "/common/header.php";
+    require_once dirname(__DIR__) . "/objects/posts.php";
 
     // prepare post object
     $post = new Post($db);
 
-    $appPath = 'http://localhost/GDIT/app';
 ?>
-
-<?php
-    session_start();
-
-    if (!isset($_SESSION['id'])) {
-        $message = 'You must be logged in to access this page';
-    }
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Edit a post</title>
-    <link rel="stylesheet" prefetch href="https://fonts.googleapis.com/css?family=Open+Sans:600">
-    <link rel="stylesheet" href="../../assets/css/createpost.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
-    <script src="<?php echo $appPath . '/ckeditor/ckeditor.js';?>"></script>
-    <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
-</head>
-
 <body>
     <?php
-
         $id = $_GET['idpost'];
 
         $stmt = $post->editPost($id);
@@ -44,45 +16,50 @@
         while ($row = $stmt->fetch())
         {
             $idOld = $row['id'];
-            $title = $row['title'];
-            $content = $row['content'];
+            $title = htmlspecialchars($row['title']);
+            $content = htmlspecialchars($row['content']);
         }
     ?>
-        <form method="POST">
-        <div class="title">
-            <h2>Title <input class="input" type="text" placeholder="Input your post title" name="title" required value="<?php echo $title; ?>"></h2>
-        </div>
-        <div class="content">
-            <textarea class="editor1" name="editor1"><?php echo $content; ?></textarea>
-            <script>
-                CKEDITOR.replace('editor1');
-            </script>
-            </br>
-        </div>
-        <button class="submit" type="submit" name="submit">Apply change</button>
+    <div>
+        <h2 class="text-success text-center mt-3 mb-4">EDIT POST</h2>
+    </div>
+    <form method="POST">
+        <table class="container table">
+            <tr>
+                <td>Title</td>
+                <td><input class="input" type="text" placeholder="Input your post title" name="title" value="<?php echo $title;?>" required></td>
+            </tr>
+            <tr>
+                <td>Content</td>
+                <td><textarea id="editor1" name="editor1"><?php echo $content;?></textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input class="submit text-center btn btn-primary" type="submit" value="Apply change" name="change"></td>
+            </tr>
+        </table>
         <?php
-            if (isset($_POST['submit'])) {
+            if (isset($_POST['change'])) {
                 $newTitle = $_POST['title'];
-                $newEditor1 = $_POST['editor1'];
+                $newEditor = $_POST['editor1'];
 
-                if ($_POST['editor1'] == null) {
+                if ($newEditor == null) {
                     echo "<font color='red'>Content field is empty.</font><br/>";
                 } else {
-                    // print_r($idOld." ". $newTitle." ". $newEditor1);
-                    $stmt = $post->updatedPost($idOld, $newTitle, $newEditor1, $_SESSION['id']);
-
+                    $stmt = $post->updatedPost($idOld, $newTitle, $newEditor, $_SESSION['id']);
                     if ($stmt) {
-                        echo "<script type='text/javascript'>alert('Post has updated successfully.');window.location='./managementposts.php';</script>";
+                        $_SESSION['updated'] = "Updated successfully for post $idOld";
+                        header("Location: managementposts.php");
                     } else {
-                        echo "<font color='red'>Post has not updated successfully.";
-                        echo "<br/><button><a href='./managementposts.php'>Reload Management Post</a></button>";
+                        $_SESSION['ufailed'] = "Updated failed for post $idOld";
+                        header("Location: managementposts.php");
                     }
                 }
             }
         ?>
-
     </form>
-
 </body>
-
 </html>
+<?php
+    require_once dirname(__DIR__) . "/common/footer.php";
+?>

@@ -1,3 +1,6 @@
+.table td{
+    vertical-align: inherit;
+}
 .title {
     display: inline;
     /* the default for span */
@@ -29,9 +32,11 @@
 }*/
 
 .submit {
-    position: relative;
+/*    position: relative;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%);*/
+    height: 50px;
+    width: auto;
 }
 
 /*.result {

@@ -1,8 +1,9 @@
 <?php
     // include database and object files
     // require_once ('../config/database.php');
-    require_once("../common/header.php");
-    require_once ("../objects/posts.php");
+    require_once dirname(__DIR__) . "/common/header.php";
+    require_once dirname(__DIR__) . "/objects/posts.php";
+    require_once dirname(__DIR__) . "/common/generalFunction.php";
 
     $database = new Database();
 
@@ -10,48 +11,41 @@
 
     // prepare post object
     $post = new Post($db);
+
 ?>
 
 <?php
-    $appPath = 'http://localhost/GDIT/app';
-    session_start();
+    // $replace= new General();
 
-    if (!isset($_SESSION['id'])) {
-        $message = 'You must be logged in to access this page';
-        print_r($message);
-        header("Location: ../../index.html");
-    }
+    // $start = dirname(__DIR__) . "/common/header.php";
+    // $destination = dirname(__DIR__) . "/Post/createpost.php";
+    // $partern = "/<title>([^<]*)<\/title>/im";
+    // $replacement = "<title>Create a new post</title>";
+    // $newtitle = $replace->replaceContentForPartent($partern, $replacement, $destination, $start);
+    //change <title></title>
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Create a new post</title>
-    <link rel="stylesheet" href="<?php echo $appPath . '/assets/css/createpost.css';?>">
-    
-    <script src="<?php echo $appPath . '/ckeditor/ckeditor.js';?>"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
-</head>
-
 <body>
+    <div>
+        <h2 class="text-success text-center mt-3 mb-4">CREATE POST</h2>
+    </div>
     <form method="POST">
-        <div class="title">
-            <h2>Title <input class="input" type="text" placeholder="Input your post title" name="title" required></h2>
-        </div>
-        <div class="content">
-            <textarea id="editor1" name="editor1" ></textarea>
-            <script type="text/javascript">
-                        CKEDITOR.replace( 'editor1', {
-                filebrowserUploadMethod: 'form',
-             });
-            </script>
-            </br>
-        </div>
-        <button class="submit" type="submit" name="submit">Save</button>
+        <table class="container table">
+            <tr>
+                <td>Title</td>
+                <td><input class="input" type="text" placeholder="Input your post title" name="title" required></td>
+            </tr>
+            <tr>
+                <td>Content</td>
+                <td><textarea id="editor1" name="editor1"></textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input class="submit text-center btn btn-primary" type="submit" value="Save" name="save"></td>
+            </tr>
+        </table>
         <?php
-            if (isset($_POST['submit'])) {
-                $title = $_POST['title'];
+            if (isset($_POST['save'])) {
+                $title = trim($_POST['title']);
                 $editor1 = $_POST['editor1'];
 
                 if ($_POST['editor1'] == null) {
@@ -61,10 +55,10 @@
 
                     if ($stmt) {
                         echo "<font color='green'>Post has added successfully.";
-                        echo "<br/><button><a href='./managementposts.php'>View Result</a></button>";
+                        echo "<br/><button><a href='managementposts.php'>View Result</a></button>";
                     } else {
                         echo "<font color='red'>Post has not added.";
-                        echo "<br/><button><a href='./managementposts.php'>Reload</a></button>";
+                        echo "<br/><button><a href='managementposts.php'>Reload</a></button>";
                     }
                 }
             }
@@ -73,3 +67,6 @@
 </body>
 
 </html>
+<?php
+    require_once dirname(__DIR__) . "/common/footer.php";
+?>

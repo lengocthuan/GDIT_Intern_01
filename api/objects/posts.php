@@ -23,7 +23,7 @@ class Post
     public function managementPost()
     {
         // select all query
-        $query = "SELECT `id`, `title`, `content`, `status`, `user_id` FROM " . $this->table_name;
+        $query = "SELECT `id`, `title`, `content`, `status`, `user_id` FROM " . $this->table_name . " ORDER BY `id` DESC";
         // prepare query statement
         $stmt = $this->conn->prepare($query);
         // execute query

@@ -10,9 +10,27 @@
     // var_dump(preg_replace('/^.+_|\.[^.]+$/', ' ', 'src="/var/www/html/GDIT/app/ckeditor/kcfinder/upload/images/nghiale01.jpg"')) ;
 ?> -->
 <?php
+        require_once dirname(__DIR__) . "/app/api/common/generalFunction.php";
+        $using = new General();
+
+        // $link = "http://localhost/GDIT/app/local/le-ngoc-thuan_40.html";
+        // $link_1 =  "/var/www/html/GDIT/app/local/15615_24.html";
+        $temp = "HLV Park Hang Seo tuyên bố, hãy chờ tin vui Việt Nam vs Malaysia";
+        var_dump($temp); die();
+        $change = $using->convert_vi_to_en($temp);
+        // $temp = dirname(__DIR__) ."/app/temp.html";
+        // $destination = dirname(__DIR__) . "/app/testCK.html";
+        // $subject = file_get_contents($link_1);
+
+        var_dump($change);
+
+
+    ?>
+<?php
+die();
 //     require_once ('api/config/database.php');
 //     require_once ('api/objects/posts.php');
-        require_once ('api/config/ftp.php');
+        // require_once ('api/config/ftp.php');
 
 //     // get database connection
 //     $database = new Database();
@@ -77,13 +95,20 @@
                 $subject = file_get_contents($file);
                 return file_put_contents($link, preg_replace($partent, $replacement, $subject));
             }
-            $link = "local/fhkfxhxgh.html";
+            $link = "local/hom-nay-la-ngay-cuoi-tuan-chi-tu-a-:d.html";
             // $array = ["ba", "bama"];
-            $array = ["/var/www/html/GDIT/app/global/15615/nghiale01.jpg", "/var/www/html/GDIT/app/global/15615/phu03.jpg"];
+            // $array = ["/var/www/html/GDIT/app/global/15615/nghiale01.jpg", "/var/www/html/GDIT/app/global/15615/phu03.jpg"];
 
             $subject = file_get_contents($link);
-            $partern = "/var/www/html/GDIT/app/ckeditor/kcfinder/upload/images/";
-            $replace = "/home/thuan/global/$title/";
-            // preg_match_all($partern, $subject, $matches, PREG_SET_ORDER, 0);
+            $partern = '/src="http/';
+            // $replace = "/home/thuan/global/$title/";http
+            preg_match_all($partern, $subject, $matches, PREG_SET_ORDER, 0);
+            print_r($matches);
+            die();
+            if (!empty($matches)) {
+                echo "khong co";
+
+            }
+            else echo "co khop";
 
 ?>

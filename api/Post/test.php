@@ -6,6 +6,3 @@
     // file_put_contents('template_for_user.html', preg_replace($partern, $replacement, $subject));
 
 ?> -->
-<?php
-$a =substr( 'freetuts.net',  0, 100);
-var_dump($a) ;
