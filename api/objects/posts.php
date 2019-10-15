@@ -121,11 +121,4 @@ class Post
         return $data;
     }
 
-    // public function upload($checkList) {
-    //     foreach ($checkList as $value) {
-    //         $query = "SELECT `title`, `content` FROM" . $this->table_name . "WHERE `id` = :id";
-
-    //         $stmt = $this->conn->prepare()
-    //     }
-    // }
 }
