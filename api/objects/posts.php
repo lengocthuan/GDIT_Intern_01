@@ -13,6 +13,7 @@ class Post
     public $user_id;
     public $created_at;
     public $updated_at;
+    public $path_in_global;
 
     // constructor with $db as database connection
     public function __construct($db)
@@ -23,7 +24,7 @@ class Post
     public function managementPost()
     {
         // select all query
-        $query = "SELECT `id`, `title`, `content`, `status`, `user_id` FROM " . $this->table_name . " ORDER BY `id` DESC";
+        $query = "SELECT `id`, `title`, `content`, `status`, `user_id`, `path_in_global` FROM " . $this->table_name . " ORDER BY `id` DESC";
         // prepare query statement
         $stmt = $this->conn->prepare($query);
         // execute query
@@ -95,6 +96,21 @@ class Post
         return false;
     }
 
+    public function updateStatus($id, $path)
+    {
+        $query = "UPDATE " . $this->table_name. " SET `status`=:newStatus,`updated_at`=:newUpdated_at, `path_in_global` =:newPath WHERE `id`=:id";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindValue(":newStatus", 3);
+        $stmt->bindValue(":newPath", $path);
+        $stmt->bindValue(":newUpdated_at", date('Y-m-d h:i:s', time()));
+        $stmt->bindValue(":id", $id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
     public function removepost($id)
     {
         $query = "DELETE FROM " .$this->table_name. " WHERE `id` = :id";

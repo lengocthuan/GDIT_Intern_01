@@ -1,11 +1,15 @@
 <?php
-
+    require_once dirname(__DIR__) . "/config/config.php";
+?>
+<head>
+    <title><?php echo EDIT; ?></title>
+</head>
+<?php
     require_once dirname(__DIR__) . "/common/header.php";
     require_once dirname(__DIR__) . "/objects/posts.php";
 
     // prepare post object
     $post = new Post($db);
-
 ?>
 <body>
     <?php

@@ -36,6 +36,8 @@
             $str = str_replace("----","-",$str);
             $str = str_replace("---","-",$str);
             $str = str_replace("--","-",$str);
+
+            $str = substr($str, 0, 50);
           return $str;
         }
 

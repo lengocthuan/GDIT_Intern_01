@@ -61,11 +61,24 @@
             }
         ?>
     </p>
-    <form method="POST">
+    <p>
+        <?php
+            if (isset($_SESSION['not_exist'])) {
+                ?>
+                <div class='alert alert-info alert-danger'>
+                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                        <strong><?php echo $_SESSION['not_exist']; ?></strong>
+                </div>
+                <?php
+                unset($_SESSION['not_exist']);
+            }
+        ?>
+    </p>
+    <form method="POST" id="form">
     <div class = "container createpost" >
         <a href="createpost.php" class="btn btn-success" role="button" data-toggle="tooltip" title="Create"><i class="fas fa-plus-square"></i></a>
-        <button class="btn btn-primary" type="submit" name="submit" value="upload" data-toggle="tooltip" title="Upload"><i class="fas fa-cloud-upload-alt"></i></button>
-        <button class="btn btn-danger" type="submit" name="remove" value="remove" data-toggle="tooltip" title="Remove"><i class="fas fa-trash-alt"></i></button>
+        <button class="btn btn-primary" type="submit" name="submit" value="upload" onclick="return submitForm()" data-toggle="tooltip" title="Upload"><i class="fas fa-cloud-upload-alt"></i></button>
+        <button class="btn btn-danger" type="submit" name="remove" value="remove" onclick="return submitForm()" data-toggle="tooltip" title="Remove"><i class="fas fa-trash-alt"></i></button>
         <button class="btn btn-warning" type="submit" name="restore" value="restore" data-toggle="tooltip" title="Restore"><i class="fas fa-trash-restore-alt"></i></button>
     </div>
     <table class="container table table-border" >
@@ -78,21 +91,31 @@
         </tr>
         <tr>
                 <td class="width10">Edited</td>
-                <td class="width15"><input type="checkbox" class="check" id="checkAll">Check All</td>
+                <td class="width15"><label><input type="checkbox" class="checkbox" id="checkAll">Check All</label></td>
                 <td class="width10">Information</td>
         </tr>
         <tbody class="tbody">
             <?php while ($row = $stmt->fetch()): ?>
             <tr>
                 <td><?php echo $row['id']; ?></td>
-                <td class ="alignment-left"><?php echo htmlspecialchars($row['title']); ?></td>
+                <td class ="alignment-left">
+                    <?php
+                        if ($row['status'] == 3) {
+                            ?>
+                            <a href="<?php echo PATH_GLOBAL_FTP . $row['id'] . $row['path_in_global']; ?>"><?php echo htmlspecialchars($row['title']); ?></a>
+                    <?php
+                    } else {
+                        echo htmlspecialchars($row['title']); 
+                    }
+                ?>
+                </td>
                 <td>
                     <a href="editpost.php?idpost=<?php echo $row['id'];?>">
                         <i class="fas fa-edit"></i>
                     </a>
                 </td>
                 <td>
-                    <input class ="check" type="checkbox" name="post[]" value="<?php echo $row['id'];?>"/>&nbsp;
+                    <input class ="checkbox" type="checkbox" name="post[]" value="<?php echo $row['id'];?>"/>&nbsp;
                 </td>
                 <td class ="alignment-left">
                     <?php
@@ -117,6 +140,7 @@
         </tbody>
     </table>
     </form>
+    <script src="<?php echo LOCAL_PATH . '/assets/js/validate_checkbox.js' ;?>" type="text/javascript"></script>
 </body>
 <?php
         if (isset($_POST['submit']) || isset($_POST['remove'])) {
@@ -129,11 +153,8 @@
                     if (isset($_POST['submit'])) {
                         header("Location: upload.php");
                     } else {
-                        echo '<script language="javascript">confirm("Do you want to remove the selected posts?");</script>';
                         header("Location: removepost.php");
                     }
-            } else {
-                echo '<script language="javascript">alert("Please select the checkbox you want.");</script>';
             }
         }
     ?>
@@ -152,6 +173,7 @@
     echo $page->getPagination();
 ?>
 </html>
+
 <?php
     require_once dirname(__DIR__) . "/common/footer.php";
 ?>

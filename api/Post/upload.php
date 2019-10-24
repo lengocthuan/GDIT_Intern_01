@@ -43,14 +43,14 @@
 
             // $convert = new ConvertString();
             $rename_title = $using->convert_vi_to_en($title);
-            $limited_title = substr($rename_title, 0, 50);
-            $check_title_before_create_file = $using->checkCreateFile($limited_title, $id_old);
+            // $rename_title = substr($rename_title, 0, 50);
+            $check_title_before_create_file = $using->checkCreateFile($rename_title, $id_old);
 
             if ($check_title_before_create_file) {
-                $local_file_path = "$path" . "/local/$limited_title" . "_$id_old.html";
+                $local_file_path = "$path" . "/local/$rename_title" . "_$id_old.html";
             } else {
                 $local_file_path = "$path" . "/local/the_post_$id_old.html";
-                $limited_title = "the_post";
+                $rename_title = "the_post";
             }
 
             if (!copy($link, $local_file_path)) {
@@ -141,7 +141,7 @@
             $using->replaceContentForPartent($partent_temp_html, $replacement_temp_html, $temp_html, $local_file_path);
 
             // local & server file path
-            $remoteFilePath = $replacement_temp_html . "/$limited_title" . "_$id_old.html";
+            $remoteFilePath = $replacement_temp_html . "$rename_title" . "_$id_old.html";
             
             // try to upload file
             if (ftp_put($conn_id, $remoteFilePath, $temp_html, FTP_ASCII)) {
@@ -155,6 +155,9 @@
             //close ftp
             ftp_close($conn_id);
             file_put_contents($temp_html, "");
+
+            $post->updateStatus($value, "/$rename_title" . "_$id_old.html");
+
         }
     }
 

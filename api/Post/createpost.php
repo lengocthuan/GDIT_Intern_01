@@ -1,4 +1,10 @@
 <?php
+    require_once dirname(__DIR__) . "/config/config.php";
+?>
+<head>
+    <title><?php echo CREATE; ?></title>
+</head>
+<?php
     // include database and object files
     // require_once ('../config/database.php');
     require_once dirname(__DIR__) . "/common/header.php";
@@ -12,17 +18,6 @@
     // prepare post object
     $post = new Post($db);
 
-?>
-
-<?php
-    // $replace= new General();
-
-    // $start = dirname(__DIR__) . "/common/header.php";
-    // $destination = dirname(__DIR__) . "/Post/createpost.php";
-    // $partern = "/<title>([^<]*)<\/title>/im";
-    // $replacement = "<title>Create a new post</title>";
-    // $newtitle = $replace->replaceContentForPartent($partern, $replacement, $destination, $start);
-    //change <title></title>
 ?>
 <body>
     <div>
