@@ -1,13 +1,17 @@
 <?php
     // include database and object files
-    require_once dirname(__DIR__) . "/common/header.php";
-    require_once dirname(__DIR__) . "/objects/posts.php";
-    require_once dirname(__DIR__) . ('/common/generalFunction.php');
-    require_once dirname(__DIR__) . ('/config/ftp.php');
+    require_once dirname(__DIR__,2) . "/common/header.php";
+    // require_once dirname(__DIR__,2) . "/model/posts.php";
+    require_once dirname(__DIR__,2) . "/model/model.php";
+    require_once dirname(__DIR__,2) . ('/common/generalFunction.php');
+    require_once dirname(__DIR__,2) . ('/config/ftp.php');
+
+    $model = new Model($db);
+    $using = new Ftp();
+    $get_name_title = new General();
 
     if (isset($_SESSION['checkList'])) {
         foreach ($_SESSION['checkList'] as $value) {
-            $using = new Ftp();
             $connection = $using->connectFTP();
             $contents_on_server = ftp_nlist($connection, PATH_GLOBAL); //Returns an array of filenames from the specified directory on success or FALSE on error.
 
@@ -31,15 +35,17 @@
                 header("Location: managementposts.php");
             }
 
-            $post = new Post($db);
-            $stmt = $post->editPost($value);
+            //get information title from db
+            $where = ['', 'id' => $value];
+            $stmt = $model->show('posts', ['title', 'content'], $where);
 
-            while ($row = $stmt->fetch())
-            {
-                $title = htmlspecialchars($row['title']);
+            if ($stmt) {
+                while ($row = $stmt->fetch()) {
+                    $title = htmlspecialchars($row['title']);
+                }
             }
-            $get_name_title = new General();
 
+            //create html file name and check
             $rename_title = $get_name_title->convert_vi_to_en($title);
             $check_title_before_create_file = $get_name_title->checkCreateFile($rename_title, $value);
 
@@ -57,8 +63,9 @@
                 }
             }
 
-            $stmt = $post->removepost($value);
-            if ($stmt) {
+            //remove post in db
+            $condition = ['', 'id' => $value];
+            if ($model->destroy('posts', $condition)) {
                 $deleted[] = $value;
             }
         }

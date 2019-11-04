@@ -183,7 +183,7 @@ var CKBUILDER_CONFIG = {
 		'tt' : 1,
 		'ug' : 1,
 		'uk' : 1,
-		'vi' : 1,
+		'vi' : 2,
 		'zh' : 1,
 		'zh-cn' : 1
 	}

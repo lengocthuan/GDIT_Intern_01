@@ -7,12 +7,20 @@
 
 ?> -->
 <?php
-    require_once dirname(__DIR__) . "/objects/model.php";
+    require_once dirname(__DIR__,2) . "/common/header.php";
+    require_once dirname(__DIR__,2) . "/objects/model.php";
     // print_r("abc");
     $records = new Model($db);
     // $a = $records->a();
-    $a = $records->index('posts');
-    foreach ($a as $value) {
-        echo $value;
+    $all = $records->index('posts', '', ['ORDER BY `updated_at` DESC']);
+    // var_dump($a);
+    if ($all) {
+        while($row = $all->fetch()) {
+            $title[] = $row['title'];
+        }
     }
+    var_dump($title);
+
+    
+
 ?>

@@ -1,7 +1,7 @@
 <?php
-    require_once dirname(__DIR__) . "/common/header.php";
-    require_once dirname(__DIR__) . "/objects/posts.php";
-    require_once dirname(__DIR__) . "/objects/paginatepage.php";
+    require_once dirname(__DIR__,2) . "/common/header.php";
+    require_once dirname(__DIR__,2) . "/model/posts.php";
+    require_once dirname(__DIR__,2) . "/model/paginatepage.php";
 
     // prepare post object
     $post = new Post($db);
@@ -74,12 +74,12 @@
             }
         ?>
     </p>
-    <form method="POST" id="form">
+    <form method="POST" id="form" action="<?php echo LOCAL_PATH . POSTS_C;?>">
     <div class = "container createpost" >
         <a href="createpost.php" class="btn btn-success" role="button" data-toggle="tooltip" title="Create"><i class="fas fa-plus-square"></i></a>
-        <button class="btn btn-primary" type="submit" name="submit" value="upload" onclick="return submitForm()" data-toggle="tooltip" title="Upload"><i class="fas fa-cloud-upload-alt"></i></button>
+        <button class="btn btn-primary" type="submit" name="upload" value="upload" onclick="return submitForm()" data-toggle="tooltip" title="Upload"><i class="fas fa-cloud-upload-alt"></i></button>
         <button class="btn btn-danger" type="submit" name="remove" value="remove" onclick="return submitForm()" data-toggle="tooltip" title="Remove"><i class="fas fa-trash-alt"></i></button>
-        <button class="btn btn-warning" type="submit" name="restore" value="restore" data-toggle="tooltip" title="Restore"><i class="fas fa-trash-restore-alt"></i></button>
+        <!-- <button class="btn btn-warning" type="submit" name="restore" value="restore" data-toggle="tooltip" title="Restore"><i class="fas fa-trash-restore-alt"></i></button> -->
     </div>
     <table class="container table table-border" >
         <tr>
@@ -124,7 +124,7 @@
                                 echo C; //The post has been created.
                                 break;
                             case 2:
-                                echo U; //The post has been edited but not yet upload;
+                                echo U; //The post has been edited after uploaded;
                                 break;
                             case 3:
                                 echo P; //The post has been uploaded to the latest version.
@@ -142,22 +142,22 @@
     </form>
     <script src="<?php echo LOCAL_PATH . '/assets/js/validate_checkbox.js' ;?>" type="text/javascript"></script>
 </body>
-<?php
-        if (isset($_POST['submit']) || isset($_POST['remove'])) {
-            if(!empty($_POST['post'])){
-                // Loop to store and display values of individual checked checkbox.
-                    foreach($_POST['post'] as $selected){
-                        $checkList[] = $selected;
-                    }
-                    $_SESSION['checkList'] = $checkList;
-                    if (isset($_POST['submit'])) {
-                        header("Location: upload.php");
-                    } else {
-                        header("Location: removepost.php");
-                    }
-            }
-        }
-    ?>
+<!-- <?php
+        // if (isset($_POST['submit']) || isset($_POST['remove'])) {
+        //     if(!empty($_POST['post'])){
+        //         // Loop to store and display values of individual checked checkbox.
+        //             foreach($_POST['post'] as $selected){
+        //                 $checkList[] = $selected;
+        //             }
+        //             $_SESSION['checkList'] = $checkList;
+        //             if (isset($_POST['submit'])) {
+        //                 header("Location: upload.php");
+        //             } else {
+        //                 header("Location: removepost.php");
+        //             }
+        //     }
+        // }
+?> -->
 <?php
     $stmt = $post->getTotalRecord();
 
@@ -165,7 +165,7 @@
         'total' => $stmt,
         'limit' => 5,
         'full' => false,
-        'querystring' => 'trang'
+        'querystring' => 'page'
     ];
     
     $page = new Pagination($config);

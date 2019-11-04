@@ -1,34 +1,36 @@
 <?php
     // include header
-    require_once dirname(__DIR__) . ('/common/header.php');
-    require_once dirname(__DIR__) . ('/config/ftp.php');
-    require_once dirname(__DIR__) . ('/objects/posts.php');
-    require_once dirname(__DIR__) . ('/common/generalFunction.php');
-    // prepare post object
-    $post = new Post($db);
+    require_once dirname(__DIR__,2) . ('/common/header.php');
+    require_once dirname(__DIR__,2) . ('/config/ftp.php');
+    require_once dirname(__DIR__,2) . ('/model/model.php');
+    require_once dirname(__DIR__,2) . ('/common/generalFunction.php');
+    // prepare model object
+    $model = new Model($db);
 
     if (isset($_SESSION['checkList'])) {
         foreach ($_SESSION['checkList'] as $value) {
-            $stmt = $post->editPost($value);
+            $where = ['', 'id' => $value];
+            $stmt = $model->show('posts', ['title', 'content'], $where);
 
-            while ($row = $stmt->fetch())
-            {
-                $id_old = $row['id'];
-                $title = htmlspecialchars($row['title']);
-                $content = $row['content'];
+            if ($stmt) {
+                while ($row = $stmt->fetch()) {
+                    $id_old = $row['id'];
+                    $title = htmlspecialchars($row['title']);
+                    $content = $row['content'];
+                }
             }
 
-            $path = dirname(__DIR__,2);
-            $link = "$path" . "/template_for_user.html";
+            $path = dirname(__DIR__,3);
+            $link = $path . '/template_for_user.html';
 
             $using = new General();
 
-            $partern_title = "/<title>([^<]*)<\/title>/im";
+            $partern_title = '/<title>([^<]*)<\/title>/im';
             $replacement_title = "<title>$title</title>";
             $new_title = $using->replaceContentForPartent($partern_title, $replacement_title, $link, $link);
 
-            $partern_content = "/<p>([^<]*)<\/p>/im";
-            $replacement_content = "$content";
+            $partern_content = '/<p>([^<]*)<\/p>/im';
+            $replacement_content = $content;
             $new_content = $using->replaceContentForPartent($partern_content, $replacement_content, $link, $link);
 
             $partern_check_link_image_global = '/src="http/im';
@@ -41,21 +43,25 @@
                 $new_subject_content = $using->replaceContentForPartent($partern_path_local, $replacement_path_local, $link, $link);
             }
 
-            // $convert = new ConvertString();
+            $partent_youtube_iframe = 'https://www.youtube.com/watch?v=';
+            $replace_youtube_iframe = 'https://www.youtube.com/embed/';
+            $subject_youtube_iframe = file_get_contents($link);
+            $result_youtube_iframe = str_replace($partent_youtube_iframe, $replace_youtube_iframe, $subject_youtube_iframe);
+            file_put_contents($link, $result_youtube_iframe);
+
             $rename_title = $using->convert_vi_to_en($title);
-            // $rename_title = substr($rename_title, 0, 50);
             $check_title_before_create_file = $using->checkCreateFile($rename_title, $id_old);
 
             if ($check_title_before_create_file) {
-                $local_file_path = "$path" . "/local/$rename_title" . "_$id_old.html";
+                $local_file_path = $path . "/local/$rename_title" . "_$id_old.html";
             } else {
-                $local_file_path = "$path" . "/local/the_post_$id_old.html";
-                $rename_title = "the_post";
+                $local_file_path = $path . "/local/the_post_$id_old.html";
+                $rename_title = 'the_post';
             }
 
             if (!copy($link, $local_file_path)) {
                 echo "Failed to copy $link...\n";
-                echo "Log out and Log in again, please.";
+                echo 'Log out and Log in again, please.';
             }
 
             if (!chmod($local_file_path, 0777)) {
@@ -63,7 +69,7 @@
             }
 
             //reset content file template from a original file html
-            $original = "$path" . "/original.html";
+            $original = $path . "/original.html";
 
             if(!copy($original, $link)) {
                 echo "Fail to copy $original...\n";
@@ -73,17 +79,17 @@
             //export link of image in post
             $regex = '/src="([^"]+)"/'; //get string in scr= ""
             preg_match_all($regex, $content, $matches, PREG_SET_ORDER, 0);
+            
+            $original = '/var/www/html';
 
-            $original = "/var/www/html";
-
-            $originalLocal = "/GDIT/app/ckeditor/kcfinder/upload/images/";
+            $originalLocal = '/GDIT/app/ckeditor/kcfinder/upload/images/';
 
             //using FTP upload file html from LOCAL to GLOBAL
             $information_ftp = new Ftp();
             $conn_id = $information_ftp->connectFTP();
 
             // Directory name which is to be created
-            $dir = PATH_GLOBAL . "$id_old";
+            $dir = PATH_GLOBAL . $id_old;
 
             // Creating directory 
             if (ftp_mkdir($conn_id, $dir)) {
@@ -96,7 +102,7 @@
                         $using->getImageName($path_local[1], $dir);
                     }
                 } else {
-                        echo "There was an error while chmod $image_local";
+                    echo "There was an error while chmod $image_local";
                 }
             }
             else {
@@ -128,14 +134,13 @@
                         }
                     }
                 }
-                else
-                {
+                else {
                     echo "<br>";
-                    echo $dir . " not found directory : " . PATH_GLOBAL;
+                    echo $dir .  'not found directory :'  . PATH_GLOBAL;
                 }
             }
             //create a temp file from file html at local and replace src img old by new img link;
-            $temp_html = dirname(__DIR__,2) . "/temp.html"; //path local file final;
+            $temp_html = dirname(__DIR__,3) . "/temp.html"; //path local file final;
             $partent_temp_html = "/\/var\/www\/html\/GDIT\/app\/ckeditor\/kcfinder\/upload\/images\//";
             $replacement_temp_html = $dir . "/";
             $using->replaceContentForPartent($partent_temp_html, $replacement_temp_html, $temp_html, $local_file_path);
@@ -156,7 +161,11 @@
             ftp_close($conn_id);
             file_put_contents($temp_html, "");
 
-            $post->updateStatus($value, "/$rename_title" . "_$id_old.html");
+            //update status in db
+            $timestamp = date('Y-m-d h:i:s', time());
+            $fields = ['status' => 3, 'updated_at' => $timestamp, 'path_in_global' => "/$rename_title" . "_$id_old.html"];
+            $condition = ['', 'id' => $value];
+            $model->update('posts', $fields, $condition);
 
         }
     }

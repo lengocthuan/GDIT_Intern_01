@@ -1,35 +1,33 @@
-<?php
-    require_once dirname(__DIR__) . "/config/config.php";
-?>
 <head>
     <title><?php echo EDIT; ?></title>
 </head>
 <?php
-    require_once dirname(__DIR__) . "/common/header.php";
-    require_once dirname(__DIR__) . "/objects/posts.php";
-
-    // prepare post object
-    $post = new Post($db);
+    require_once dirname(__DIR__,2) . "/common/header.php";
+    require_once dirname(__DIR__,2) . "/model/model.php";
 ?>
 <body>
     <?php
-        $id = $_GET['idpost'];
+        $model = new Model($db);
 
-        $stmt = $post->editPost($id);
-
-        while ($row = $stmt->fetch())
-        {
-            $idOld = $row['id'];
-            $title = htmlspecialchars($row['title']);
-            $content = htmlspecialchars($row['content']);
+        if (isset($_GET['idpost'])) {
+            $where = ['', 'id' => $_GET['idpost']];
+            $stmt = $model->show('posts', ['title', 'content'], $where);
+            if ($stmt) {
+                while ($row = $stmt->fetch()) {
+                    $title = $row['title'];
+                    $content = $row['content'];
+                }
+            }
         }
+
     ?>
     <div>
         <h2 class="text-success text-center mt-3 mb-4">EDIT POST</h2>
     </div>
-    <form method="POST">
+    <form method="POST" action="<?php echo LOCAL_PATH . POSTS_C;?>">
         <table class="container table">
             <tr>
+                <input type="hidden" name="id_post" value="<?php echo $_GET['idpost']; ?>">
                 <td>Title</td>
                 <td><input class="input" type="text" placeholder="Input your post title" name="title" value="<?php echo $title;?>" required></td>
             </tr>
@@ -39,7 +37,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><input class="submit text-center btn btn-primary" type="submit" value="Apply change" name="change"></td>
+                <td><input class="submit text-center btn btn-primary" type="submit" value="Apply change" name="update"></td>
             </tr>
         </table>
         <?php
@@ -65,5 +63,5 @@
 </body>
 </html>
 <?php
-    require_once dirname(__DIR__) . "/common/footer.php";
+    require_once dirname(__DIR__,2) . "/common/footer.php";
 ?>

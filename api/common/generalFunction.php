@@ -52,7 +52,8 @@
             return false;
         }
 
-        public function getImageName($original_image, $directory_in_ftp) {
+        public function getImageName($original_image, $directory_in_ftp)
+        {
             $image_local_storage = ORIGINAL . $original_image; //get link image saved at local storage ("http://localhost/GDIT/app/ckeditor/kcfinder/upload/image ...")
             $get_image_name = str_replace(IMAGE_LOCAL_P, "", $original_image); //get image name saved;
             $set_image_global_path = $directory_in_ftp . "/$get_image_name"; //create new path for save image in another server;
@@ -70,5 +71,6 @@
                 echo "There was an error while uploading $get_image_name";
             }
         }
+
     }
 ?>

@@ -1,7 +1,7 @@
 <?php
-    include_once dirname(__DIR__,1) . "/config/config.php";
-    require_once dirname(__DIR__,1) . "/config/database.php";
-    require_once dirname(__DIR__,1) . "/common/checkLogin.php";
+    include_once dirname(__DIR__) . "/config/config.php";
+    require_once dirname(__DIR__) . "/config/database.php";
+    require_once dirname(__DIR__) . "/common/checkLogin.php";
 
     session_start();
     ob_start();
@@ -32,7 +32,7 @@
 </head>
 <body>
     <div class="topnav fixed-top">
-        <a href="<?php echo LOCAL_PATH . "/api/Post/managementposts.php"?>" class="text-success float-left">Home</a>
+        <a href="<?php echo LOCAL_PATH . HOME?>" class="text-success float-left">Home</a>
         <a class="float-right text-primary"><?php echo $_SESSION['username']; ?></a>
         <a href="../User/logout.php" style="float: right;">Logout</a>
     </div>

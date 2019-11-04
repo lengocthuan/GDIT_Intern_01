@@ -1,26 +1,28 @@
 <?php
-class Database
-{
-    // specify your own database credentials
-    private $host = "localhost";
-    private $db_name = "GDIT_Intern_01";
-    private $username = "root";
-    private $password = "thuan";
-    public $conn;
+    require_once 'config.php';
 
-    // get the database connection
-    public function getConnection()
+    class Database
     {
-        $this->conn = null;
+        // specify your own database credentials
+        private $host = ENV_HOST;
+        private $db_name = ENV_DB_NAME;
+        private $username = ENV_USERNAME;
+        private $password = ENV_PASSWD;
+        public $conn;
 
-        try {
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            $this->conn->exec("set names utf8");
-        } catch (PDOException $exception) {
-            echo "Connection error: " . $exception->getMessage();
+        // get the database connection
+        public function getConnection()
+        {
+            $this->conn = null;
+
+            try {
+                $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
+                $this->conn->exec("set names utf8");
+            } catch (PDOException $exception) {
+                echo "Connection error: " . $exception->getMessage();
+            }
+
+            return $this->conn;
         }
-
-        return $this->conn;
     }
-}
 ?>

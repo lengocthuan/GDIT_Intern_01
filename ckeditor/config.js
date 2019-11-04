@@ -10,11 +10,12 @@ CKEDITOR.editorConfig = function( config ) {
     config.filebrowserBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=files';
     config.filebrowserImageBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=images';
     config.filebrowserFlashBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=flash';
-    config.filebrowserUploadUrl = '/var/www/html/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=files';
-    config.filebrowserImageUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=images';
+    // config.filebrowserUploadUrl = '/var/www/html/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=files';
+    // config.filebrowserImageUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=images';
     config.filebrowserFlashUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=flash';
 
     config.extraPlugins = 'filebrowser';
+    config.extraPlugins = 'attach';
     config.filebrowserBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php';
-    config.filebrowserUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php';
+    // config.filebrowserUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php';
 };

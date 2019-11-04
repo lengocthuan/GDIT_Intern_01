@@ -123,7 +123,7 @@ class Post
         }
         return false;
     }
-
+    //dont need
     public function getTotalRecord()
     {
         $query = "SELECT count(*) FROM " . $this->table_name;
