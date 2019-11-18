@@ -704,6 +704,7 @@ class browser extends uploader {
         }
 
         $filename = $this->normalizeFilename($file['name']);
+        //fix rename for file same filename;
         $target = "$dir/" . file::getInexistantFilename($filename, $dir);
 
         if (!@move_uploaded_file($file['tmp_name'], $target) &&

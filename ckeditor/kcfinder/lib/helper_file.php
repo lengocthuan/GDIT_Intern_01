@@ -172,7 +172,7 @@ class file {
   * @return string */
 
     static function getInexistantFilename($filename, $dir=null, $tpl=null) {
-        if ($tpl === null)  $tpl = "{name}({sufix}){ext}";
+        if ($tpl === null)  $tpl = "{name}_{sufix}{ext}";
         $fullPath = ($dir === null);
         if ($fullPath)
             $dir = path::normalize(dirname($filename));

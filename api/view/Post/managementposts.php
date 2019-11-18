@@ -1,12 +1,11 @@
 <?php
     require_once dirname(__DIR__,2) . "/common/header.php";
-    require_once dirname(__DIR__,2) . "/model/posts.php";
-    require_once dirname(__DIR__,2) . "/model/paginatepage.php";
+    require_once dirname(__DIR__,2) . "/model/model.php";
 
     // prepare post object
-    $post = new Post($db);
+    $model = new Model($db);
 
-    $stmt = $post->managementPost();
+    $stmt = $model->index('posts', '', ['ORDER BY `updated_at` DESC']);
 
 ?>
 <body>
@@ -100,9 +99,9 @@
                 <td><?php echo $row['id']; ?></td>
                 <td class ="alignment-left">
                     <?php
-                        if ($row['status'] == 3) {
+                        if ($row['status'] == 3 || $row['status'] == 2) {
                             ?>
-                            <a href="<?php echo PATH_GLOBAL_FTP . $row['id'] . $row['path_in_global']; ?>"><?php echo htmlspecialchars($row['title']); ?></a>
+                            <a href="<?php echo PATH_GLOBAL_FTP . $row['path_in_global']; ?>"><?php echo htmlspecialchars($row['title']); ?></a>
                     <?php
                     } else {
                         echo htmlspecialchars($row['title']); 
@@ -142,38 +141,7 @@
     </form>
     <script src="<?php echo LOCAL_PATH . '/assets/js/validate_checkbox.js' ;?>" type="text/javascript"></script>
 </body>
-<!-- <?php
-        // if (isset($_POST['submit']) || isset($_POST['remove'])) {
-        //     if(!empty($_POST['post'])){
-        //         // Loop to store and display values of individual checked checkbox.
-        //             foreach($_POST['post'] as $selected){
-        //                 $checkList[] = $selected;
-        //             }
-        //             $_SESSION['checkList'] = $checkList;
-        //             if (isset($_POST['submit'])) {
-        //                 header("Location: upload.php");
-        //             } else {
-        //                 header("Location: removepost.php");
-        //             }
-        //     }
-        // }
-?> -->
-<?php
-    $stmt = $post->getTotalRecord();
-
-    $config = [
-        'total' => $stmt,
-        'limit' => 5,
-        'full' => false,
-        'querystring' => 'page'
-    ];
-    
-    $page = new Pagination($config);
-
-    echo $page->getPagination();
-?>
 </html>
-
 <?php
-    require_once dirname(__DIR__) . "/common/footer.php";
+    require_once dirname(__DIR__,2) . "/common/footer.php";
 ?>

@@ -14,7 +14,7 @@
             $stmt = $model->show('posts', ['title', 'content'], $where);
             if ($stmt) {
                 while ($row = $stmt->fetch()) {
-                    $title = $row['title'];
+                    $title = htmlspecialchars($row['title']);
                     $content = $row['content'];
                 }
             }
@@ -24,6 +24,19 @@
     <div>
         <h2 class="text-success text-center mt-3 mb-4">EDIT POST</h2>
     </div>
+    <p>
+        <?php
+            if (isset($_SESSION['null_edit'])) {
+                ?>
+                <div class='alert alert-info alert-danger'>
+                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                        <strong><?php echo $_SESSION['null_edit']; ?></strong>
+                </div>
+                <?php
+                unset($_SESSION['null_edit']);
+            }
+        ?>
+    </p>
     <form method="POST" action="<?php echo LOCAL_PATH . POSTS_C;?>">
         <table class="container table">
             <tr>
@@ -40,25 +53,6 @@
                 <td><input class="submit text-center btn btn-primary" type="submit" value="Apply change" name="update"></td>
             </tr>
         </table>
-        <?php
-            if (isset($_POST['change'])) {
-                $newTitle = $_POST['title'];
-                $newEditor = $_POST['editor1'];
-
-                if ($newEditor == null) {
-                    echo "<font color='red'>Content field is empty.</font><br/>";
-                } else {
-                    $stmt = $post->updatedPost($idOld, $newTitle, $newEditor, $_SESSION['id']);
-                    if ($stmt) {
-                        $_SESSION['updated'] = "Updated successfully for post $idOld";
-                        header("Location: managementposts.php");
-                    } else {
-                        $_SESSION['ufailed'] = "Updated failed for post $idOld";
-                        header("Location: managementposts.php");
-                    }
-                }
-            }
-        ?>
     </form>
 </body>
 </html>

@@ -7,9 +7,9 @@
     // prepare user object
     $user = new User($db);
     // set ID property of user to be edited
-    $user->username = isset($_POST['username']) ? $_POST['username'] : die();
-    $user->password = isset($_POST['password']) ? $_POST['password'] : die();
-    echo $_POST['username'] . " - = - " . $_POST['password']; die();
+    $user->username = isset($_GET['username']) ? $_GET['username'] : die();
+    $user->password = isset($_GET['password']) ? $_GET['password'] : die();
+    // echo $_GET['username'] . " - = - " . $_GET['password']; die();
     // read the details of user to be edited
     $stmt = $user->login();
 

@@ -1,7 +1,6 @@
 <?php
     // include database and object files
     require_once dirname(__DIR__,2) . "/common/header.php";
-    // require_once dirname(__DIR__,2) . "/model/posts.php";
     require_once dirname(__DIR__,2) . "/model/model.php";
     require_once dirname(__DIR__,2) . ('/common/generalFunction.php');
     require_once dirname(__DIR__,2) . ('/config/ftp.php');
@@ -13,13 +12,12 @@
     if (isset($_SESSION['checkList'])) {
         foreach ($_SESSION['checkList'] as $value) {
             $connection = $using->connectFTP();
-            $contents_on_server = ftp_nlist($connection, PATH_GLOBAL); //Returns an array of filenames from the specified directory on success or FALSE on error.
+            $contents_on_server = ftp_nlist($connection, IMAGES_GLOBAL); //Returns an array of filenames from the specified directory on success or FALSE on error.
 
-            $folder_child_in_G = PATH_GLOBAL . $value;
+            $folder_child_in_G = IMAGES_GLOBAL . $value;
 
             if (in_array($folder_child_in_G, $contents_on_server)) {
-
-                $content_inside_child_folder = ftp_nlist($connection, $folder_child_in_G . "/");
+                $content_inside_child_folder = ftp_nlist($connection, $folder_child_in_G . '/');
                 foreach ($content_inside_child_folder as $need_remove) {
                     if (!ftp_delete($connection, $need_remove)) {
                         echo "Problem deleting children file inside folder $value";
@@ -31,7 +29,7 @@
                             echo "Cant remove this folder $value at it's address: $folder_child_in_G";break;
                 }
             } else {
-                $_SESSION['not_exist'] = "Folder $value hasn't exist on Global.";
+                // $_SESSION['not_exist'] = "Folder $value hasn't exist on Global.";
                 header("Location: managementposts.php");
             }
 
@@ -45,21 +43,26 @@
                 }
             }
 
-            //create html file name and check
-            $rename_title = $get_name_title->convert_vi_to_en($title);
-            $check_title_before_create_file = $get_name_title->checkCreateFile($rename_title, $value);
+            //remove file html publicized and file html on local
+            $content_to_remove_on_ftps = ftp_nlist($connection, PATH_GLOBAL);
 
-            if ($check_title_before_create_file) {
-                $local_file_path = LOCAL_ORIGINAL . "/local/$rename_title" . "_$value.html";
-            } else {
-                $local_file_path = LOCAL_ORIGINAL . "/local/the_post_$value.html";
+            foreach ($content_to_remove_on_ftps as $val) {
+                if (strpos($val, $value)) {
+                    if (!ftp_delete($connection, $val)) {
+                        echo 'Cant remove file' . $val;
+                    }
+                }
             }
 
-            $file_local_need_remove = $local_file_path;
-
-            if (!empty($local_file_path)) {
-                if (!unlink($file_local_need_remove)) {
-                    echo "Cant remove file with id: $value";
+            //remove file html on local
+            $path_local = LOCAL_ORIGINAL . '/local/';
+            $content_to_remove_on_local = ftp_nlist($connection, $path_local);
+            // var_dump($content_to_remove_on_local);die();
+            foreach ($content_to_remove_on_local as $item) {
+                if (strpos($item, $value)) {
+                    if (!ftp_delete($connection, $item)) {
+                        echo 'Cant remove file' . $item;
+                    }
                 }
             }
 

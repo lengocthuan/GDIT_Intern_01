@@ -2,12 +2,13 @@
     date_default_timezone_set('Asia/Ho_Chi_Minh');
 
     //define paths
-    define('HOST', 'http://localhost');
+    define('HOST', 'http://managementpage.gdit.vn');
     define('ORIGINAL', '/var/www/html');
     define('LOCAL_ORIGINAL', '/var/www/html/GDIT/app');
-    define('LOCAL_PATH','http://localhost/GDIT/app');
-    define('PATH_GLOBAL', '/home/thuan/ftp/global/');
-    define('PATH_GLOBAL_FTP', 'ftp://127.0.0.1/global/');
+    define('LOCAL_PATH','http://managementpage.gdit.vn/GDIT/app');
+    define('PATH_GLOBAL', '/var/www/html/public/ftp/global/');
+    define('IMAGES_GLOBAL', '/var/www/html/public/ftp/global/images/');
+    define('PATH_GLOBAL_FTP', 'http://publicpage.gdit.vn');
     define('IMAGE_LOCAL_P', '/GDIT/app/ckeditor/kcfinder/upload/images/');
     define('POSTS_C', '/api/controller/PostsController.php');
     define('USERS_C', '/api/controller/UsersController.php');
@@ -27,8 +28,8 @@
     //define router view for website
     define ('LOGIN', '/api/view/User/login.php');
     define ('HOME', '/api/view/Post/managementposts.php');
-    define ('CREATE', '/api/view/Post/createpost.php');
-    define ('EDIT', '/api/view/Post/editpost.php');
+    define ('P_CREATE', '/api/view/Post/createpost.php');
+    define ('P_EDIT', '/api/view/Post/editpost.php');
     define ('REMOVE_POST', '/api/view/Post/removepost.php');
     define ('PUBLIC_POST', '/api/view/Post/upload.php');
 
@@ -42,3 +43,7 @@
     define ('FTP_HOST', '127.0.0.1');
     define ('FTP_USERNAME', 'thuan');
     define ('FTP_PASSWD', 'thuan');
+
+    //define table database name
+    define('USERS', 'users');
+    define('POSTS', 'posts');

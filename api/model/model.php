@@ -1,5 +1,7 @@
 <?php
-    require_once dirname(__DIR__) . '/common/header.php';
+    require_once dirname(__DIR__) . '/config/database.php';
+    require_once dirname(__DIR__) . '/config/config.php';
+
     class Model
     {
         private $conn;
@@ -54,32 +56,43 @@
             }
 
             $columns = '*';
-            if (!empty($fileds)) {
-                $columns = implode(',', $fileds);
+            if (!empty($fields)) {
+                $columns = implode(',', $fields);
             }
 
             $clause = '';
             if (!empty($where)) {
-                //where(parameter1, parameter2);
-                //para1 is Operators such as AND, NOT, OR
-                //para2 is normal condition such as `id = 1`;
-                if ($where[0] == '') {
-                    foreach ($where as $key => $value) {
-                        if ($key !== key($array)) {
-                            $clause = $key . ' = ' . "'" . $value . "'";
-                        }
+                foreach ($where as $key => $value) {
+                    if ($key !== key($where)) {
+                        $result[] = $key . ' = ' . "'" . $value . "'"; 
                     }
+                }
+                switch ($where[0]) {
+                    case 'NOT':
+                        if (count($result) === 1) {
+                            $condition = " NOT " . $result[0];
+                        }
+                        break;
+                    case 'AND' || 'OR':
+                        $condition = implode(" $where[0] ", $result);
+                        break;
+                    
+                    default:
+                        $condition = implode('', $result);
+                        break;
                 }
             }
 
-            $query = 'SELECT ' . $columns . ' FROM ' . $table .' WHERE '. $clause;
+            if (isset($condition)) {
+                $query = 'SELECT ' . $columns . ' FROM ' . $table .' WHERE '. $condition;
 
-            $stmt = $this->conn->prepare($query);
+                $stmt = $this->conn->prepare($query);
 
-            if ($stmt->execute()) {
-                return $stmt;
+                if ($stmt->execute()) {
+                    return $stmt;
+                }
+                return false;
             }
-            return false;
         }
 
         public function create($table, $fields = array())

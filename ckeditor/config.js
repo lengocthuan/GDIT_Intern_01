@@ -7,15 +7,15 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
-    config.filebrowserBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=files';
-    config.filebrowserImageBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=images';
-    config.filebrowserFlashBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=flash';
+    config.filebrowserBrowseUrl = 'http://managementpage.gdit.vn/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=files';
+    config.filebrowserImageBrowseUrl = 'http://managementpage.gdit.vn/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=images';
+    config.filebrowserFlashBrowseUrl = 'http://managementpage.gdit.vn/GDIT/app/ckeditor/kcfinder/browse.php?opener=ckeditor&type=flash';
     // config.filebrowserUploadUrl = '/var/www/html/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=files';
     // config.filebrowserImageUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=images';
-    config.filebrowserFlashUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=flash';
+    config.filebrowserFlashUploadUrl = 'http://managementpage.gdit.vn/GDIT/app/ckeditor/kcfinder/upload.php?opener=ckeditor&type=flash';
 
     config.extraPlugins = 'filebrowser';
     config.extraPlugins = 'attach';
-    config.filebrowserBrowseUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/browse.php';
+    config.filebrowserBrowseUrl = 'http://managementpage.gdit.vn/GDIT/app/ckeditor/kcfinder/browse.php';
     // config.filebrowserUploadUrl = 'http://localhost/GDIT/app/ckeditor/kcfinder/upload.php';
 };

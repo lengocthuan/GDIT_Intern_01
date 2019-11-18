@@ -12,6 +12,19 @@
     <div>
         <h2 class="text-success text-center mt-3 mb-4">CREATE POST</h2>
     </div>
+    <p>
+        <?php
+            if (isset($_SESSION['null'])) {
+                ?>
+                <div class='alert alert-info alert-danger'>
+                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                        <strong><?php echo $_SESSION['null']; ?></strong>
+                </div>
+                <?php
+                unset($_SESSION['null']);
+            }
+        ?>
+    </p>
     <form method="POST" action="<?php echo LOCAL_PATH . POSTS_C;?>">
         <table class="container table">
             <tr>

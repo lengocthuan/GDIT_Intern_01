@@ -4,6 +4,6 @@
             });
     $("#checkAll").click(function () {
         // alert("sndfnsdnfsdf");
-        $(".check").prop('checked', $(this).prop('checked'));
+        $(".checkbox").prop('checked', $(this).prop('checked'));
     });
 </script>

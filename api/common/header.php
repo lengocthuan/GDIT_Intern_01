@@ -6,9 +6,6 @@
     session_start();
     ob_start();
 
-    $database = new Database();
-
-    $db = $database->getConnection();
 ?>
 <!DOCTYPE html>
 <html>
