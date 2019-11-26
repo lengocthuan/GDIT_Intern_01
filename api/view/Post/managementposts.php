@@ -80,45 +80,50 @@
         <button class="btn btn-danger" type="submit" name="remove" value="remove" onclick="return submitForm()" data-toggle="tooltip" title="Remove"><i class="fas fa-trash-alt"></i></button>
         <!-- <button class="btn btn-warning" type="submit" name="restore" value="restore" data-toggle="tooltip" title="Restore"><i class="fas fa-trash-restore-alt"></i></button> -->
     </div>
-    <table class="container table table-border" >
-        <tr>
-            <th class ="border-top" rowspan="2">No.</th>
-            <th class ="border-top" rowspan="2">Post title</th>
-            <th class="border-top center" colspan="3">
-                    Status
-            </th>
-        </tr>
-        <tr>
-                <td class="width10">Edited</td>
-                <td class="width15"><label><input type="checkbox" class="checkbox" id="checkAll">Check All</label></td>
-                <td class="width10">Information</td>
-        </tr>
-        <tbody class="tbody">
-            <?php while ($row = $stmt->fetch()): ?>
+    <table class="container table table-border table-hover">
+        <thead>
             <tr>
-                <td><?php echo $row['id']; ?></td>
+                <th class ="border-top" style = "vertical-align: middle;" rowspan="2">No.<i class="fas fa-sort-up"></i><i class="fas fa-sort-down"></i></th>
+                <th class ="border-top" style = "vertical-align: middle;" rowspan="2">Post title</th>
+                <th class="border-top center" colspan="5">
+                        Information
+                </th>
+            </tr>
+            <tr>
+                <td class="width10">Edited</td>
+                <td class="width10">Status</td>
+                <td >Created at</td>
+                <td >Publicized at</td>
+                <td class="width15"><label><input type="checkbox" class="checkbox" id="checkAll">Check All</label></td>
+            </tr>
+        </thead>
+        <tbody class="tbody">
+            <?php
+                $row = $stmt->fetchAll();
+                if (!empty($row)){
+                    foreach ($row as $value) {
+            ?>
+            <tr>
+                <td><?php echo $value['id']; ?></td>
                 <td class ="alignment-left">
                     <?php
-                        if ($row['status'] == 3 || $row['status'] == 2) {
+                        if ($value['status'] == 3 || $value['status'] == 2) {
                             ?>
-                            <a href="<?php echo PATH_GLOBAL_FTP . $row['path_in_global']; ?>"><?php echo htmlspecialchars($row['title']); ?></a>
+                            <a href="<?php echo PATH_GLOBAL_FTP . $value['path_in_global']; ?>"><?php echo htmlspecialchars($value['title']); ?></a>
                     <?php
                     } else {
-                        echo htmlspecialchars($row['title']); 
+                        echo htmlspecialchars($value['title']); 
                     }
                 ?>
                 </td>
                 <td>
-                    <a href="editpost.php?idpost=<?php echo $row['id'];?>">
+                    <a href="editpost.php?idpost=<?php echo $value['id'];?>">
                         <i class="fas fa-edit"></i>
                     </a>
                 </td>
-                <td>
-                    <input class ="checkbox" type="checkbox" name="post[]" value="<?php echo $row['id'];?>"/>&nbsp;
-                </td>
                 <td class ="alignment-left">
                     <?php
-                        switch ($row['status']) {
+                        switch ($value['status']) {
                             case 1:
                                 echo C; //The post has been created.
                                 break;
@@ -134,12 +139,53 @@
                         }
                     ?>
                 </td>
+                <td>
+                    <?php
+                        if (is_null($value['created_at'])) {
+                            echo 'updating...';
+                        } else {
+                            echo date_format(date_create($value['created_at']), 'd-m-Y H:m:s');
+                        }
+                    ?>
+                </td>
+                <td>
+                    <?php
+                        if ($value['status'] == 3) {
+                            echo date_format(date_create($value['publicized_at']), 'd-m-Y H:m:s');
+                        } else {
+                            echo 'updating...';
+                        }
+                    ?>
+                </td>
+                <td>
+                    <input class ="checkbox" type="checkbox" name="post[]" value="<?php echo $value['id'];?>"/>&nbsp;
+                </td>
             </tr>
-            <?php endwhile; ?>
+            <?php
+                    }
+                } else {
+            ?>
+            <tr>
+                <td colspan="7" style='color:grey;'><i>Data is empty. Please create a new post if you want.</i></td>
+            </tr>
+            <?php
+                }
+
+            ?>
         </tbody>
     </table>
     </form>
     <script src="<?php echo LOCAL_PATH . '/assets/js/validate_checkbox.js' ;?>" type="text/javascript"></script>
+    <?php
+        if (isset($_GET['pageno'])) {
+            $pageno = $_GET['pageno'];
+        } else {
+            $pageno = 1;
+        }
+        $no_of_records_per_page = 5;
+        $offset = ($pageno-1) * $no_of_records_per_page;
+        
+    ?>
 </body>
 </html>
 <?php

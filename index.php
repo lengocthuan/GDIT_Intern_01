@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>Login</title>
         <link rel="shortcut icon" type="image/png" href="assets/favicon.png"/>
-        <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Open+Sans:600'>
+        <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Open+Sans:600">
         <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/css/signup.css">
@@ -12,34 +12,23 @@
         <script src="assets/js/jquery.min.js"></script>
     </head>
     <body>
-        <div>
-            <?php
-            require_once dirname(__FILE__) . '/api/config/config.php';
-            // require_once dirname(__FILE__) . '/api/controller/UsersController.php';
-            session_start();
-            if (isset($_SESSION['login_fail'])) {
-            ?>
-            <div class='alert alert-warning alert-dismissible' role='alert'>
-                <a href='#'  class="close" data-dismiss="alert" aria-label="Close">&times;</a>
-                <strong><?php echo $_SESSION['login_fail']; ?></strong>
-            </div>
-            <?php
-                unset($_SESSION['login_fail']);
-            }
-            if (isset($_SESSION['id'])) {
-                header('Location: ' . LOCAL_PATH . HOME);
-            }
-            ?>
-        </div>
+    <?php
+        require_once dirname(__FILE__).'/api/config/config.php';
+        session_start();
+        if (isset($_SESSION['id'])) {
+        	header('Location: '. LOCAL_PATH . LOGOUT);
+        }
+    ?>
+    <span id='msg' class='msg'></span>
         <div class="login-wrap">
             <div class="login-html">
                 <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
                 <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab" >Sign Up</label>
                 <div class="login-form">
-                    <form method="POST" class="sign-in-htm" action="<?php echo LOCAL_PATH . USERS_C;?> ">
+                    <form method="POST" class="sign-in-htm">
                         <div class="group">
                             <label for="user" class="label">Username</label>
-                            <input id="username" name="username" type="text" class="input">
+                            <input id="username-login" name="username" type="text" class="input">
                         </div>
                         <div class="group">
                             <label for="pass" class="label">Password</label>
@@ -50,12 +39,10 @@
                         </div>
                         <div class="group">
                             </br>
-                            <input type="submit" name="login" class="button" value="Sign In">
+                            <input type="submit" id="login-home" name="login" class="button" value="Sign In">
                         </div>
                     </form>
-                    <!-- onsubmit="return checkForm(this);" -->
                     <form class="sign-up-htm" method="POST">
-                        <!-- <div id="error_msg"></div> -->
                         <div class="group">
                             <label for="user" class="label">Username</label>
                             <input id="username-sign-up" name="username" type="text" class="input">
@@ -97,7 +84,7 @@
         </div>
     </div>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/validate_signin.js"></script>
     <script src="assets/js/validate_signup.js"></script>
+    <script src="assets/js/validate_signin.js"></script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 <?php
     // include database and object files
-    require_once dirname(__DIR__,2) . "/common/header.php";
-    require_once dirname(__DIR__,2) . "/model/model.php";
-    require_once dirname(__DIR__,2) . ('/common/generalFunction.php');
-    require_once dirname(__DIR__,2) . ('/config/ftp.php');
+    require_once dirname(__DIR__,2) . '/common/header.php';
+    require_once dirname(__DIR__,2) . '/model/model.php';
+    require_once dirname(__DIR__,2) . '/common/generalFunction.php';
+    require_once dirname(__DIR__,2) . '/config/ftp.php';
 
     $model = new Model($db);
     $using = new Ftp();
@@ -43,7 +43,7 @@
                 }
             }
 
-            //remove file html publicized and file html on local
+            //remove file html publicized and file html on global
             $content_to_remove_on_ftps = ftp_nlist($connection, PATH_GLOBAL);
 
             foreach ($content_to_remove_on_ftps as $val) {
@@ -56,11 +56,11 @@
 
             //remove file html on local
             $path_local = LOCAL_ORIGINAL . '/local/';
-            $content_to_remove_on_local = ftp_nlist($connection, $path_local);
+            $content_to_remove_on_local = scandir($path_local);
             // var_dump($content_to_remove_on_local);die();
             foreach ($content_to_remove_on_local as $item) {
                 if (strpos($item, $value)) {
-                    if (!ftp_delete($connection, $item)) {
+                    if (!unlink($path_local . $item)) {
                         echo 'Cant remove file' . $item;
                     }
                 }

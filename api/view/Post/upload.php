@@ -43,7 +43,7 @@
 
             if (empty($matches)) {
                 $partern_path_local = '/src="/im';
-                $replacement_path_local = 'src="/var/www/html';
+                $replacement_path_local = SRC_REP;
                 $new_subject_content = $using->replaceContentForPartent($partern_path_local, $replacement_path_local, $link, $link);
             }
 
@@ -84,9 +84,9 @@
             $regex = '/src="([^"]+)"/'; //get string in scr= ""
             preg_match_all($regex, $content, $matches, PREG_SET_ORDER, 0);
             
-            $original = '/var/www/html';
+            // $original = '/var/www/html';
 
-            $originalLocal = '/GDIT/app/ckeditor/kcfinder/upload/images/';
+            // $originalLocal = '/GDIT/app/ckeditor/kcfinder/upload/images/';
 
             // Directory name which is to be created
             // $dir = PATH_GLOBAL . $value;
@@ -96,7 +96,7 @@
             if (ftp_mkdir($conn_id, $dir_images)) {
                 // Execute if directory created successfully 
                 echo "$dir_images Successfully created";echo "<br>";
-                if (ftp_chmod($conn_id, 0777, $dir_images)) {
+                if (ftp_chmod($conn_id, 0775, $dir_images)) {
                 // Execute if directory created successfully 
                     echo "$dir_images Successfully chmod";echo "<br>";
                     foreach ($matches as $path_local) {
@@ -124,7 +124,7 @@
 
                     foreach ($check_content_in_directory as $item) {
                         $path_info = pathinfo($item);
-                        if ($path_info['extension'] != "html") {
+                        if ($path_info['extension'] != 'html') {
                             $list_content[] = $path_info['basename'];
                         }
                     }
@@ -138,7 +138,7 @@
                 }
                 else {
                     echo "<br>";
-                    echo $dir_images .  'not found directory :'  . PATH_GLOBAL;
+                    echo $dir_images . ' not found directory : ' . PATH_GLOBAL;
                 }
             }
             //create a temp file from file html at local and replace src img old by new img link;
@@ -154,7 +154,7 @@
             // try to upload file
             if (ftp_put($conn_id, $remoteFilePath, $temp_html, FTP_ASCII)) {
                 echo "File transfer successful - $local_file_path";
-                if (!ftp_chmod($conn_id, 0644, $remoteFilePath)) {
+                if (!ftp_chmod($conn_id, 0775, $remoteFilePath)) {
                     echo "Error when chmod for file $remoteFilePath";
                 }
             } else {
@@ -166,7 +166,7 @@
             //update status in db
             $timestamp = date('Y-m-d h:i:s', time());
 
-            $fields = ['status' => 3, 'updated_at' => $timestamp, 'path_in_global' => "/$rename_title" . "_$value.html"];
+            $fields = ['status' => 3, 'updated_at' => $timestamp, 'path_in_global' => "/$rename_title" . "_$value.html", 'publicized_at' => $timestamp];
             $condition = ['', 'id' => $value];
             $model->update('posts', $fields, $condition);
         }

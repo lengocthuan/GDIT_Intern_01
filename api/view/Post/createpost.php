@@ -25,11 +25,14 @@
             }
         ?>
     </p>
-    <form method="POST" action="<?php echo LOCAL_PATH . POSTS_C;?>">
+    <form method="POST" action="" id="create-post-form">
+<!--     <form method="POST" action=""> <?php 
+    // echo LOCAL_PATH . POSTS_C;
+    ?> -->
         <table class="container table">
             <tr>
                 <td>Title</td>
-                <td><input class="input" type="text" placeholder="Input your post title" name="title" required></td>
+                <td><input id="create-title" class="input" type="text" placeholder="Input your post title" name="title" ></td>
             </tr>
             <tr>
                 <td>Content</td>
@@ -41,10 +44,12 @@
             </tr> -->
             <tr>
                 <td></td>
-                <td><input class="submit text-center btn btn-primary" type="submit" value="Save" name="create"></td>
+                <td><input class="submit text-center btn btn-primary" type="submit" value="Save" name="create" id="save_post"></td>
             </tr>
         </table>
     </form>
+
+    <script src='/assets/js/validate_create.js'></script>
 </body>
 
 </html>

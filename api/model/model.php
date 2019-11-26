@@ -44,7 +44,9 @@
             $stmt = $this->conn->prepare($query);
 
             if ($stmt->execute()) {
-                return $stmt;
+                if(!is_null($stmt->execute())){
+                    return $stmt;
+                }
             }
             return false;
         }

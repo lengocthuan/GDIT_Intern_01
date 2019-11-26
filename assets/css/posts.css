@@ -11,6 +11,9 @@ td {
     border: 1px solid black;
 }
 
+
+}
+
 .fa-file-alt {
     color: #0ea3e8;
 }
@@ -111,11 +114,12 @@ ul li.active {
 }
 
 .tbody {
-    border-top: 1px !important;
+    border-top: 1px solid black !important;
 }
 
 .border-top {
-    border-top: 1px solid #000 !important;
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important;
 }
 
 .width15 {
@@ -124,4 +128,8 @@ ul li.active {
 
 .width10 {
     width: 10%;
+}
+
+.table thead th {
+    vertical-align: middle;
 }

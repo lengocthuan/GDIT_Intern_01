@@ -54,16 +54,16 @@
 
         public function getImageName($original_image, $directory_in_ftp, $id_post)
         {
-            $image_local_storage = ORIGINAL . $original_image; //get link image saved at local storage ("http://localhost/GDIT/app/ckeditor/kcfinder/upload/image ...")
+            $image_local_storage = LOCAL_ORIGINAL . $original_image; //get link image saved at local storage ("http://localhost/GDIT/app/ckeditor/kcfinder/upload/image ...")
             $get_image_name = str_replace(IMAGE_LOCAL_P, '', $original_image); //get image name saved;
             $set_image_global_path = $directory_in_ftp . "/$get_image_name"; //create new path for save image in another server;
 
             $ftp = new Ftp();
             $connection = $ftp->connectFTP();
 
-            if (ftp_put($connection, $set_image_global_path, $image_local_storage, FTP_ASCII)) {
+            if (ftp_put($connection, $set_image_global_path, $image_local_storage, FTP_BINARY)) {
                 echo "File transfer successful - $get_image_name";echo "<br>";
-                if (!ftp_chmod($connection, 0644, $set_image_global_path)){
+                if (!ftp_chmod($connection, 0775, $set_image_global_path)){
                     echo "Error chmod file image has attack inside folder"; die();
                 }
                 return $get_image_name;

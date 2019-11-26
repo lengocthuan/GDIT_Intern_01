@@ -5,40 +5,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
-    <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 </head>
 
 <body>
-<form name="myForm" id="myForm" onsubmit="return validateForm();">
-    First Name: <input type="text" id="name" /> <br />
-    <span id="nameErrMsg" class="error"></span> <br />
-    <!-- ... all your other stuff ... -->
-</form>
-<button id="validateTestButton" value="Validate now" onclick="validateForm();">Validate now</button>
-    <script>
-        validateForm = function () {
-    return checkName();
-}
-
-function checkName() {
-    var x = document.myForm;
-    var input = x.name.value;
-    var errMsgHolder = document.getElementById('nameErrMsg');
-    if (input.length < 3) {
-        errMsgHolder.innerHTML =
-            'Please enter a name with at least 3 letters';
-        return false;
-    } else if (!(/^\S{3,}$/.test(input))) {
-        errMsgHolder.innerHTML =
-            'Name cannot contain whitespace';
-        return false;
-    } else {
-        errMsgHolder.innerHTML = '';
-        return undefined;
-    }
-}
-    </script>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
 </body>
 
 </html>

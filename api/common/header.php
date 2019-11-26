@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
 
     <title><?php echo MANAGE; ?></title>
-
+    <link rel="shortcut icon" type="image/png" href="<?php echo LOCAL_PATH . '/assets/favicon.png';?>"/>
     <link rel="stylesheet" prefetch href="https://fonts.googleapis.com/css?family=Open+Sans:600">
     <link rel="stylesheet" href="<?php echo LOCAL_PATH . '/assets/bootstrap/css/bootstrap.min.css';?>">
     <link rel="stylesheet" href="<?php echo LOCAL_PATH . '/assets/fontawesome/css/all.min.css';?>">

@@ -5,7 +5,7 @@
 
     $model = new Model($db);
     
-    if (isset($_POST['login'])) {
+    if (isset($_POST['login']) == 1) {
         $fields = ['id', 'username', 'password'];
         $username = strval(trim($_POST['username']));
         $condition = ['', 'username' => $username];
@@ -27,15 +27,18 @@
                 if ($compare) {
                         $_SESSION['id'] = $id;
                         $_SESSION['username'] = $uname;
-                        header('Location:' . LOCAL_PATH . HOME);
+                        $homepage = LOCAL_PATH . HOME;
+
+                        echo $homepage; die();
                 }
             }
         }
-        $_SESSION['login_fail'] = 'Password or Username failed.';
-        header('Location:' . LOCAL_PATH . '/index.php');
+        // $_SESSION['login_fail'] = 'Password or Username failed.';
+        // header('Location:' . LOCAL_PATH . '/index.php');
+        echo 'Unallowed'; die();
     }
 
-    if (isset($_POST['username'])) {
+    if (isset($_POST['check']) == 1) {
         $username = strval(trim($_POST['username']));
 
         if ($username != '') {
@@ -47,7 +50,7 @@
             if ($stmt) {
                 $row = $stmt->fetch();
                 if ($row) {
-                    echo 'taken'; 
+                    echo 'taken';
                 } else {
                     echo 'not_taken';
                 }
@@ -62,7 +65,7 @@
         $timestamp = date('Y-m-d H:m:s', time());
 
         if ($username != '' && $passwd != '') {
-            if (strcmp($passwd, $passwd_confirm) == 0) {
+            if (strcmp($passwd, $passwd_confirm) === 0) {
                 $password = password_hash($passwd, PASSWORD_ARGON2I);
                 $fields = ['username' => $username, 'password' => $password, 'created_at' => $timestamp, 'updated_at' => $timestamp];
 

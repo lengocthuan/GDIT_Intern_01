@@ -8,7 +8,7 @@
     $timestamp = date('Y-m-d H:m:s', time());
 
     if (isset($_POST['create'])) {
-        if (trim($_POST['editor1']) !== '') {
+        if (trim($_POST['editor1']) != '') {
             $attack_fields = ['user_id' => $_SESSION['id'], 'created_at' => $timestamp, 'updated_at' => $timestamp, 'status' => 1];
             $fields = ['title' => trim($_POST['title']), 'content' => $_POST['editor1']];
 
@@ -19,11 +19,11 @@
             }
         } 
     } else {
-            $_SESSION['null'] = 'Please input content before apply';
+            // $_SESSION['null'] = 'Please input content before apply';
             header('Location: ' . LOCAL_PATH . P_CREATE);
         }
 
-    if (isset($_POST['update']) && trim($_POST['editor1']) !== '') {
+    if (isset($_POST['update']) && trim($_POST['editor1']) != '') {
         $where = ['', 'id' => $_POST['id_post']];
         $stmt_show = $model->show('posts', ['status'], $where);
 
