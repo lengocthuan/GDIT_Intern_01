@@ -7,23 +7,25 @@
 
     $timestamp = date('Y-m-d H:m:s', time());
 
-    if (isset($_POST['create'])) {
-        if (trim($_POST['editor1']) != '') {
-            $attack_fields = ['user_id' => $_SESSION['id'], 'created_at' => $timestamp, 'updated_at' => $timestamp, 'status' => 1];
-            $fields = ['title' => trim($_POST['title']), 'content' => $_POST['editor1']];
+    if (isset($_POST['create']) == 1) {
+        $attack_fields = ['user_id' => $_SESSION['id'], 'created_at' => $timestamp, 'updated_at' => $timestamp, 'status' => 1];
+        $fields = ['title' => trim($_POST['title']), 'content' => $_POST['content']];
 
-            $fields = array_merge($fields, $attack_fields);
+        $fields = array_merge($fields, $attack_fields);
 
-            if ($model->create('posts', $fields)) {
-                header('Location: ' . LOCAL_PATH . HOME);
-            }
-        } 
-    } else {
-            // $_SESSION['null'] = 'Please input content before apply';
-            header('Location: ' . LOCAL_PATH . P_CREATE);
+        if ($model->create('posts', $fields)) {
+            // header('Location: ' . LOCAL_PATH . HOME);
+            echo LOCAL_PATH . HOME;
+        } else {
+            echo 'unsuccessful';
         }
+    } 
+    // else {
+    //         // $_SESSION['null'] = 'Please input content before apply';
+    //         header('Location: ' . LOCAL_PATH . P_CREATE);
+    //     }
 
-    if (isset($_POST['update']) && trim($_POST['editor1']) != '') {
+    if (isset($_POST['edit']) == 1) {
         $where = ['', 'id' => $_POST['id_post']];
         $stmt_show = $model->show('posts', ['status'], $where);
 
@@ -42,13 +44,17 @@
             $attack_fields = ['user_id' => $_SESSION['id'], 'updated_at' => $timestamp];
         }
 
-        $fields = ['title' => trim($_POST['title']), 'content' => $_POST['editor1']];
+        $fields = ['title' => trim($_POST['title']), 'content' => $_POST['content']];
         $condition = ['', 'id' => $_POST['id_post']];
         $fields = array_merge($fields, $attack_fields);
 
         $stmt = $model->update('posts', $fields, $condition);
         if ($stmt) {
-            header('Location: ' . LOCAL_PATH . HOME);
+            // header('Location: ' . LOCAL_PATH . HOME);
+            echo LOCAL_PATH . HOME;
+
+        } else {
+            echo 'Error-edit';
         }
     } 
 

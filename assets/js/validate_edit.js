@@ -2,18 +2,28 @@ $(document).ready(function(){
 	var title_status = false;
 	var content_status = false;
 
-	var title_post = '';
-	var content_post = '';
+	var title_edit = '';
+	var content_edit = '';
 
 	function getValues() {
-		title_post = document.getElementById("create-title").value.trim();
-		content_post = CKEDITOR.instances.editor1.getData();
+		title_edit = document.getElementById("edit-title").value.trim();
+		content_edit = CKEDITOR.instances.editor1.getData();
 	}
 
-	$('#save-post').click(function() {
+	$.urlParam = function(name){
+		var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+		if (results==null){
+			return null;
+		}
+		else{
+			return results[1] || 0;
+		}
+	}
+
+	$('#apply-change').click(function() {
 		getValues();
-		if (title_post == '' || content_post == ''){
-			if (title_post == ''){
+		if (title_edit == '' || content_edit == ''){
+			if (title_edit == ''){
 				$(".modal-body").addClass("alert alert-warning").html("Please input anything in title if you want create a post.");
 				$('#myModal').modal();
 			} else {
@@ -21,7 +31,7 @@ $(document).ready(function(){
 				$('#myModal').modal();
 			}
 		} else {
-			if (title_post.length > 50){
+			if (title_edit.length > 50){
 				$(".modal-body").addClass("alert alert-warning").html("Please enter a title with a character limit of 50");
 				$('#myModal').modal();
 			} else {
@@ -29,7 +39,7 @@ $(document).ready(function(){
 				content_status = true;
 			}
 		}
-		// alert(content_post);
+
 		if (title_status != false && content_status != false){
 
 			// debugger;
@@ -37,19 +47,20 @@ $(document).ready(function(){
 				type: 'post',
 				url: '/api/controller/PostsController.php',
 				data: {
-					'create' : 1,
-					'title' : title_post,
-					'content' : content_post,
+					'edit' : 1,
+					'title' : title_edit,
+					'content' : content_edit,
+					'id_post' : $.urlParam('idpost'),
 				},
-				success: function(create) {
-					if (create != 'unsuccessful') {
-						$(".modal-body").removeClass().addClass("modal-body alert alert-success").html("You has created a post successful.");
+				success: function(update) {
+					if (update != 'Error-edit') {
+						$(".modal-body").removeClass().addClass("modal-body alert alert-success").html("You has edited a post successful.");
 						$('#myModal').modal();
 						window.setTimeout(function() { 
-							window.location.href = create;
-						}, 550);
+							window.location.href = update;
+						}, 1000);
 					} else {
-						$(".modal-body").addClass("alert alert-warning").html("There was an error creating the post. Please try again.");
+						$(".modal-body").addClass("alert alert-danger").html("An error occurred while editing. Please try again.");
 						$('#myModal').modal();
 						return false;
 					}
@@ -59,3 +70,4 @@ $(document).ready(function(){
 		return false;
 	});
 });
+

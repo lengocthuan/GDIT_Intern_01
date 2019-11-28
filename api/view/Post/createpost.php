@@ -1,6 +1,7 @@
 <head>
     <title><?php echo CREATE; ?></title>
-</head>
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <link rel="stylesheet" href="/assets/css/modal.css">
 <?php
     // include database and object files
     // require_once ('../config/database.php');
@@ -8,27 +9,32 @@
     require_once dirname(__DIR__,2) . "/common/generalFunction.php";
 
 ?>
+
+</head>
+
 <body>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Notification:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    </div>
     <div>
         <h2 class="text-success text-center mt-3 mb-4">CREATE POST</h2>
     </div>
-    <p>
-        <?php
-            if (isset($_SESSION['null'])) {
-                ?>
-                <div class='alert alert-info alert-danger'>
-                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                        <strong><?php echo $_SESSION['null']; ?></strong>
-                </div>
-                <?php
-                unset($_SESSION['null']);
-            }
-        ?>
-    </p>
     <form method="POST" action="" id="create-post-form">
-<!--     <form method="POST" action=""> <?php 
-    // echo LOCAL_PATH . POSTS_C;
-    ?> -->
         <table class="container table">
             <tr>
                 <td>Title</td>
@@ -44,11 +50,11 @@
             </tr> -->
             <tr>
                 <td></td>
-                <td><input class="submit text-center btn btn-primary" type="submit" value="Save" name="create" id="save_post"></td>
+                <td><input class="submit text-center btn btn-primary" type="submit" value="Save" name="create" id="save-post"></td>
             </tr>
         </table>
     </form>
-
+    <script type="text/javascript" src="/assets/js/modal.js"></script>
     <script src='/assets/js/validate_create.js'></script>
 </body>
 
