@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	var title_status = false;
 	var content_status = false;
+	var redirect_status = false;
 
 	var title_edit = '';
 	var content_edit = '';
@@ -41,8 +42,6 @@ $(document).ready(function(){
 		}
 
 		if (title_status != false && content_status != false){
-
-			// debugger;
 			$.ajax({
 				type: 'post',
 				url: '/api/controller/PostsController.php',
@@ -56,9 +55,11 @@ $(document).ready(function(){
 					if (update != 'Error-edit') {
 						$(".modal-body").removeClass().addClass("modal-body alert alert-success").html("You has edited a post successful.");
 						$('#myModal').modal();
+						redirect_status = true;
 						window.setTimeout(function() { 
 							window.location.href = update;
 						}, 1000);
+
 					} else {
 						$(".modal-body").addClass("alert alert-danger").html("An error occurred while editing. Please try again.");
 						$('#myModal').modal();
@@ -69,5 +70,12 @@ $(document).ready(function(){
 		}
 		return false;
 	});
+
+	window.onbeforeunload = function(){
+		// getValues();
+		if (redirect_status != true){
+			return 'Are you sure you want to leave?';
+		}
+	};
 });
 

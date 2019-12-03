@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="<?php echo LOCAL_PATH . '/assets/css/navigation.css';?>">
 
     <script src="<?php echo LOCAL_PATH . '/assets/js/jquery.min.js' ; ?>"></script>
+    <script src="<?php echo LOCAL_PATH . '/assets/js/jquery.bootpag.min.js' ; ?>"></script>
     <script src="<?php echo LOCAL_PATH . '/assets/bootstrap/js/bootstrap.min.js'; ?>"></script>
     <script src="<?php echo LOCAL_PATH . '/ckeditor/ckeditor.js';?>"></script>
 

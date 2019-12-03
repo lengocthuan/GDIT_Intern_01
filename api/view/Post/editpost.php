@@ -7,7 +7,7 @@
     require_once dirname(__DIR__,2) . "/common/header.php";
     require_once dirname(__DIR__,2) . "/model/model.php";
 ?>
-<body>
+<body onunload="onbeforeunload()">
     <?php
         $model = new Model($db);
 

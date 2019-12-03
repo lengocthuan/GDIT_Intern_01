@@ -52,3 +52,6 @@
 
     //define replacement update path after save image from kcfinder server to local server
     define('SRC_REP','src="/var/www/html/GDIT/app');
+
+    //define number records of per page
+    $no_of_records_per_page = 5;

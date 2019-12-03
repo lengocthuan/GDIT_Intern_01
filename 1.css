@@ -1,12 +1,17 @@
-body{
-  text-align:center;
-  padding:50px;
+/*Generic*/
+.wrapper{
+  margin: 60px auto;
+  text-align: center;
 }
-.modal.fade{
-  opacity:1;
+h1{
+  margin-bottom: 1.25em;
 }
-.modal.fade .modal-dialog {
-   -webkit-transform: translate(0);
-   -moz-transform: translate(0);
-   transform: translate(0);
+
+/*Specific styling*/
+#content{
+  padding: 15px;
+  border: solid 1px #eee;
+  max-width: 660px;
+  margin: auto;
+  border-radius: 4px;
 }

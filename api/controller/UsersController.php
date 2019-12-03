@@ -62,7 +62,7 @@
         $username = strval(trim($_POST['uname']));
         $passwd = strval(trim($_POST['passwd']));
         $passwd_confirm = strval(trim($_POST['passwd_confirm']));
-        $timestamp = date('Y-m-d H:m:s', time());
+        $timestamp = date('Y-m-d H:i:s', time());
 
         if ($username != '' && $passwd != '') {
             if (strcmp($passwd, $passwd_confirm) === 0) {

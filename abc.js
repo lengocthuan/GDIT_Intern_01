@@ -1,11 +1,13 @@
-function testAnim(x) {
-    $('.modal .modal-dialog').attr('class', 'modal-dialog  ' + x + '  animated');
-};
-$('#myModal').on('show.bs.modal', function (e) {
-  var anim = $('#entrance').val();
-      testAnim(anim);
+$('#pagination-here').bootpag({
+    total: 10,          
+    page: 1,            
+    maxVisible: 5,     
+    leaps: true,
+    href: "#result-page-{{number}}",
 })
-$('#myModal').on('hide.bs.modal', function (e) {
-  var anim = $('#exit').val();
-      testAnim(anim);
-})
+
+//page click action
+$('#pagination-here').on("page", function(event, num){
+    //show / hide content or pull via ajax etc
+    $("#result-page").html("Page " + num); 
+});
