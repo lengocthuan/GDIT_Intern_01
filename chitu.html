@@ -19,27 +19,159 @@
 </body>
 </html> -->
 
+<?php 
+require_once('load.php');
+ 
+if( isset( $_POST ) ){
+    $response = '';
+    
+    if( isset( $_POST['page'] ) ){
+        $page = $_POST['page'];
+        $cur_page = $page;
+        $page -= 1;
+        $per_page = 20;
+        $previous_btn = true;
+        $next_btn = true;
+        $first_btn = true;
+        $last_btn = true;
+        $start = $page * $per_page;
+        
+        $all_blog_posts = DB::db_get_results("
+            SELECT * FROM item ORDER BY id DESC LIMIT %d, %d", array( $start, $per_page ) );
+        
+        $count = DB::db_get_var("
+            SELECT COUNT(id) FROM item", array() );
+        
+        foreach( $all_blog_posts as $key => $post ){ 
+            $response .= '
+            <div class = "col-md-12">       
+                <h3>' . $post->iname . '</h3>
+                <p>Item ID: ' . $post->id . '</p>
+                <p>Date Entered:  ' . $post->entry . '</p>
+            </div>';
+            
+        }
+        
+        $no_of_paginations = ceil( $count / $per_page );
+ 
+        if($cur_page >= 7){
+            $start_loop = $cur_page - 3;
+            if( $no_of_paginations > $cur_page + 3 )
+                $end_loop = $cur_page + 3;
+            else if( $cur_page <= $no_of_paginations && $cur_page > $no_of_paginations - 6 ){
+                $start_loop = $no_of_paginations - 6;
+                $end_loop = $no_of_paginations;
+            } else {
+                $end_loop = $no_of_paginations;
+            }
+        } else {
+            $start_loop = 1;
+            if( $no_of_paginations > 7 ){
+                $end_loop = 7;
+            } else {
+                $end_loop = $no_of_paginations;
+            }
+        }
+        
+        $response .= "
+        <div class='pagination'>
+            <ul>";
+ 
+                if( $first_btn && $cur_page > 1 ){
+                    $response .= "<li p='1' class='active'>First</li>";
+                } else if($first_btn){
+                    $response .= "<li p='1' class='inactive'>First</li>";
+                }
+ 
+                if( $previous_btn && $cur_page > 1 ){
+                    $pre = $cur_page - 1;
+                    $response .= "<li p='" . $pre . "' class='active'>Previous</li>";
+                } else if( $previous_btn ){
+                    $response .= "<li class='inactive'>Previous</li>";
+                }
+                
+                for ($i = $start_loop; $i <= $end_loop; $i++ ){
+                    if($cur_page == $i){
+                        $response .= "<li p='" . $i . "' class = 'selected' >" . $i . "</li>";
+                    } else {
+                        $response .= "<li p='" . $i . "' class='active'>" . $i . "</li>";
+                    }
+                }
+                
+                if( $next_btn && $cur_page < $no_of_paginations ){
+                    $nex = $cur_page + 1;
+                    $response .= "<li p='" . $nex . "' class='active'>Next</li>";
+                } else if( $next_btn ){
+                    $response .= "<li class='inactive'>Next</li>";
+                }
+ 
+                if( $last_btn && $cur_page < $no_of_paginations ){
+                    $response .= "<li p='" . $no_of_paginations . "' class='active'>Last</li>";
+                } else if($last_btn){
+                    $response .= "<li p='" . $no_of_paginations . "' class='inactive'>Last</li>";
+                }
+ 
+                $response .= "
+            </ul>
+        </div>";
+        
+        echo $response;
+        exit();
+    }
+}
+ 
+ 
+?>
+ 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-  $(".btn1").click(function(){
-    $("p").hide();
-  });
-  $(".btn2").click(function(){
-    $("p").show();
-  });
-});
-</script>
+    <title>Pagination by Carl Victor C. Fontanos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+    .pagination ul {margin: 0; padding: 0;}
+    .pagination ul li {display: inline; margin: 3px; padding: 4px 8px; background: #FFF; color: black; }
+    .pagination ul li.active:hover {cursor: pointer; background: #1E8CBE; color: white; }
+    .pagination ul li.inactive {background: #7E7E7E;}
+    .pagination ul li.selected {background: #1E8CBE; color: white;}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-<p>This is a paragraph.</p>
-
-<button class="btn1">Hide</button>
-<button class="btn2">Show</button>
-
+ 
+<div class="col-md-12 content">
+    <div class = "inner-box content no-right-margin darkviolet">
+        <div class = "response-container"></div>
+    </div>      
+</div>
+ 
+<script type="text/javascript">
+jQuery(document).ready(function($){
+    var ajaxurl = window.location.href;
+    
+    function load_posts(page){
+        var data = {
+            page: page
+        };
+        
+        $.post(ajaxurl, data, function(response){
+            $(".response-container").html(response);
+        });
+    }
+    
+    load_posts(1);
+    
+    $('body').on('click', '.response-container .pagination li.active', function(){
+        var page = $(this).attr('p');
+        load_posts(page);
+        
+    });
+                
+}); 
+</script>
+ 
 </body>
 </html>
